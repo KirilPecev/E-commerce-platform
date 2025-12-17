@@ -11,10 +11,11 @@ namespace CatalogService.Domain.Aggregates
         public string? Color { get; private set; }
         public int StockQuantity { get; private set; }
 
-        public ProductVariant(Guid id, string sku, string? size, string? color, int stockQuantity)
+        public ProductVariant(Guid id, string sku, Money price, string? size, string? color, int stockQuantity)
         {
             Id = id;
             Sku = sku;
+            Price = price;
             Size = size;
             Color = color;
             StockQuantity = stockQuantity;

@@ -8,6 +8,6 @@ namespace CatalogService.Domain.Interfaces
         Task<Product?> GetByIdAsync(Guid productId);
         Task<IEnumerable<Product>> GetAllAsync();
         Task UpdateAsync(Product product);
-        Task DeleteAsync(Product product);
+        Task DeleteAsync(Guid productId);
     }
 }

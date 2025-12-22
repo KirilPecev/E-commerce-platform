@@ -1,10 +1,10 @@
-﻿
-using CatalogService.Domain.Aggregates;
+﻿using CatalogService.Domain.Aggregates;
 using CatalogService.Domain.Interfaces;
+using CatalogService.Infrastructure.Persistence;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace CatalogService.Infrastructure.Persistence.Repositories
+namespace CatalogService.Infrastructure.Repositories
 {
     public class ProductRepository
         (CatalogDbContext dbContext)

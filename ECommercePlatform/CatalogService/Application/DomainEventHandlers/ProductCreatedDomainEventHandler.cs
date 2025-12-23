@@ -1,7 +1,10 @@
 ﻿using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Events;
 
+using ECommercePlatform.Events;
+
 using MediatR;
+
 
 namespace CatalogService.Application.DomainEventHandlers
 {

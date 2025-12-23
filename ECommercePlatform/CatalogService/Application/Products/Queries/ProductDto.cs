@@ -1,6 +1,6 @@
-﻿namespace CatalogService.Contracts.Responses
+﻿namespace CatalogService.Application.Products.Queries
 {
-    public record ProductResponse(
+    public record ProductDto(
         Guid Id,
         string Name,
         decimal Amount,

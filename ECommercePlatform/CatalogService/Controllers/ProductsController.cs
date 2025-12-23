@@ -1,5 +1,7 @@
 ﻿using CatalogService.Application.Products.Commands;
+using CatalogService.Application.Products.Queries;
 using CatalogService.Contracts.Requests;
+using CatalogService.Contracts.Responses;
 
 using MediatR;
 
@@ -33,8 +35,19 @@ namespace CatalogService.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            // Query implementation later
-            return Ok();
+            ProductDto result = await mediator.Send(new GetProductByIdQuery(id));
+
+            if (result is null)
+                return NotFound();
+
+            ProductResponse response = new ProductResponse(
+                result.Id,
+                result.Name,
+                result.Amount,
+                result.Currency
+            );
+
+            return Ok(response);
         }
     }
 }

@@ -104,5 +104,19 @@ namespace CatalogService.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("{id:guid}/variants")]
+        public async Task<IActionResult> AddVariant(Guid id, [FromBody] AddProductVariantRequest request)
+        {
+            AddProductVariantCommand command = new AddProductVariantCommand(
+                id,
+                request.VariantName,
+                request.AdditionalPrice);
+            await mediator.Send(command);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id },
+                new { Id = id });
+        }
     }
 }

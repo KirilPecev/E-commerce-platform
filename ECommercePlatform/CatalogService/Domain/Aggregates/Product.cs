@@ -14,22 +14,17 @@ namespace CatalogService.Domain.Aggregates
         public DateTime CreatedAt { get; private set; }
         public List<ProductVariant> Variants { get; private set; } = new();
 
-        public Product Create(ProductName name, Money price, Guid categoryId, string? description = null)
+        public Product(ProductName name, Money price, Guid categoryId, string? description = null)
         {
-            Product product = new()
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Price = price,
-                CategoryId = categoryId,
-                Status = ProductStatus.Active,
-                Description = description,
-                CreatedAt = DateTime.UtcNow
-            };
+            Id = Guid.NewGuid();
+            Name = name;
+            Price = price;
+            CategoryId = categoryId;
+            Status = ProductStatus.Active;
+            Description = description;
+            CreatedAt = DateTime.UtcNow;
 
-            product.AddDomainEvent(new ProductCreatedDomainEvent(product.Id));
-
-            return product;
+            AddDomainEvent(new ProductCreatedDomainEvent(Id));
         }
 
         public void AddProductVariant(ProductVariant variant)

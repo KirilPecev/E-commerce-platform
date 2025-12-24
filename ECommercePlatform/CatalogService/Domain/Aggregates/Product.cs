@@ -27,12 +27,12 @@ namespace CatalogService.Domain.Aggregates
             AddDomainEvent(new ProductCreatedDomainEvent(Id));
         }
 
-        public void AddProductVariant(ProductVariant variant)
+        public void AddProductVariant(string sku, decimal amount, string currency, int stockQuantity, string? size, string? color)
         {
             if (Status == ProductStatus.Inactive)
                 throw new CatalogDomainException("Cannot add variant to inactive product");
 
-            Variants.Add(variant);
+            Variants.Add(new ProductVariant(Id, sku, new Money(amount, currency), size, color, stockQuantity));
 
             AddDomainEvent(new ProductCreatedDomainEvent(Id));
         }

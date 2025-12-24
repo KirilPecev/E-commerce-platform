@@ -12,9 +12,9 @@ namespace CatalogService.Domain.Aggregates
         public string? Color { get; private set; }
         public int StockQuantity { get; private set; }
 
-        public ProductVariant(Guid id, Guid productId, string sku, Money price, string? size, string? color, int stockQuantity)
+        public ProductVariant(Guid productId, string sku, Money price, string? size, string? color, int stockQuantity)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             ProductId = productId;
             Sku = sku;
             Price = price;

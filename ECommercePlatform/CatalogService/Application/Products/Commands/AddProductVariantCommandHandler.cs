@@ -1,5 +1,4 @@
-﻿
-using CatalogService.Application.Exceptions;
+﻿using CatalogService.Application.Exceptions;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Infrastructure.Persistence;
 
@@ -20,6 +19,10 @@ namespace CatalogService.Application.Products.Commands
 
             if (product is null)
                 throw new NotFoundException(nameof(Product), request.Id);
+
+            product.AddProductVariant(request.Sku, request.Amount, request.Currency, request.StockQuantity, request.Size, request.Color);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

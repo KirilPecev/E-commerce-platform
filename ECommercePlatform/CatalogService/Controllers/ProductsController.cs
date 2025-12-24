@@ -117,12 +117,12 @@ namespace CatalogService.Controllers
                 request.Size,
                 request.Color);
 
-            await mediator.Send(command);
+            Guid variantId = await mediator.Send(command);
 
             return CreatedAtAction(
-                nameof(GetById),
-                new { id },
-                new { Id = id });
+                nameof(GetProductVariantById),
+                new { productId = id, variantId },
+                new { ProductId = id, VariantId = variantId });
         }
 
         [HttpGet("{id:guid}/variants")]
@@ -144,13 +144,32 @@ namespace CatalogService.Controllers
             return Ok(responses);
         }
 
+        [HttpGet("{productId:guid}/variants/{variantId:guid}")]
+        public async Task<IActionResult> GetProductVariantById(Guid productId, Guid variantId)
+        {
+            ProductVariantDto? result = await mediator.Send(new GetProductVariantByIdQuery(productId, variantId));
+
+            if (result is null) return NotFound();
+
+            ProductVariantResponse response = new ProductVariantResponse(
+                result.Id,
+                result.Sku,
+                result.Amount,
+                result.Currency,
+                result.Size,
+                result.Color,
+                result.StockQuantity);
+
+            return Ok(response);
+        }
+
         [HttpDelete("{productId:guid}/variants/{variantId:guid}")]
         public async Task<IActionResult> DeleteProductVariant(Guid productId, Guid variantId)
         {
             DeleteProductVariantCommand command = new DeleteProductVariantCommand(productId, variantId);
 
             await mediator.Send(command);
-            
+
             return NoContent();
         }
 
@@ -170,9 +189,9 @@ namespace CatalogService.Controllers
             await mediator.Send(command);
 
             return CreatedAtAction(
-                nameof(GetById),
-                new { id = productId },
-                new { Id = productId });
+                nameof(GetProductVariantById),
+                new { productId, variantId },
+                new { ProductId = productId, VariantId = variantId });
         }
     }
 }

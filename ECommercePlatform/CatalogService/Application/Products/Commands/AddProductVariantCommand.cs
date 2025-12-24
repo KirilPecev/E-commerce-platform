@@ -10,5 +10,5 @@ namespace CatalogService.Application.Products.Commands
         string Currency,
         int StockQuantity,
         string? Size,
-        string? Color) : IRequest;
+        string? Color) : IRequest<Guid>;
 }

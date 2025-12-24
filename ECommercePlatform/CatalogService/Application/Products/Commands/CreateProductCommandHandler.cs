@@ -19,6 +19,7 @@ namespace CatalogService.Application.Products.Commands
                 request.Description);
 
             dbContext.Products.Add(product);
+
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return product.Id;

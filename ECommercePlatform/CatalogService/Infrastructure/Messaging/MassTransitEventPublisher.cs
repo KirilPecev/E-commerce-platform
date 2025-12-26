@@ -1,14 +1,16 @@
 ﻿
 using CatalogService.Application.Interfaces;
 
+using MassTransit;
+
 namespace CatalogService.Infrastructure.Messaging
 {
     public class MassTransitEventPublisher
-        (IEventPublisher eventPublisher) : IEventPublisher
+        (IPublishEndpoint publishEndpoint) : IEventPublisher
     {
-        public Task PublishAsync<TEvent>(TEvent @event) where TEvent : class
+        public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : class
         {
-            return eventPublisher.PublishAsync(@event);
+            await publishEndpoint.Publish(@event);
         }
     }
 }

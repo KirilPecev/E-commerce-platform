@@ -1,5 +1,4 @@
-﻿
-using CatalogService.Application.Interfaces;
+﻿using ECommercePlatform.Application.Interfaces;
 
 using MassTransit;
 

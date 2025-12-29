@@ -1,7 +1,7 @@
-﻿using CatalogService.Application.Interfaces;
-using CatalogService.Domain.Events;
+﻿using CatalogService.Domain.Events;
 
-using ECommercePlatform.Events;
+using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Events.ProductIntegrationEvents;
 
 using MediatR;
 
@@ -15,7 +15,8 @@ namespace CatalogService.Application.DomainEventHandlers
         {
             await eventPublisher.PublishAsync(new ProductUpdatedIntegrationEvent
             {
-                ProductId = notification.ProductId
+                ProductId = notification.ProductId,
+                OccurredOn = notification.OccurredOn
             });
         }
     }

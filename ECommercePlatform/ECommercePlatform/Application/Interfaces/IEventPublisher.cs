@@ -1,4 +1,4 @@
-﻿namespace CatalogService.Application.Interfaces
+﻿namespace ECommercePlatform.Application.Interfaces
 {
     public interface IEventPublisher
     {

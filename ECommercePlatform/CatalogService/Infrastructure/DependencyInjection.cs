@@ -1,7 +1,8 @@
 ﻿using CatalogService.Application;
-using CatalogService.Application.Interfaces;
 using CatalogService.Infrastructure.Messaging;
 using CatalogService.Infrastructure.Persistence;
+
+using ECommercePlatform.Application.Interfaces;
 
 using MassTransit;
 

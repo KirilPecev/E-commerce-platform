@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <Compile Remove="API\**" />
+    <Compile Remove="Domain\Common\**" />
     <Content Remove="API\**" />
+    <Content Remove="Domain\Common\**" />
     <EmbeddedResource Remove="API\**" />
+    <EmbeddedResource Remove="Domain\Common\**" />
     <None Remove="API\**" />
+    <None Remove="Domain\Common\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,10 +38,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ECommercePlatform\ECommercePlatform.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\Common\" />
   </ItemGroup>
 
 </Project>

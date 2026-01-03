@@ -1,5 +1,4 @@
-﻿using CatalogService.Application;
-using CatalogService.Infrastructure.Messaging;
+﻿using CatalogService.Infrastructure.Messaging;
 using CatalogService.Infrastructure.Persistence;
 
 using ECommercePlatform.Application.Interfaces;

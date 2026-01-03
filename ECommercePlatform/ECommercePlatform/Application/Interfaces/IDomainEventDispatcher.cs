@@ -1,6 +1,6 @@
 ﻿using ECommercePlatform.Domain.Events;
 
-namespace CatalogService.Application
+namespace ECommercePlatform.Application.Interfaces
 {
     public interface IDomainEventDispatcher
     {

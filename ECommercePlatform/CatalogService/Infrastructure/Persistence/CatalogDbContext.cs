@@ -1,6 +1,6 @@
-﻿using CatalogService.Application;
-using CatalogService.Domain.Aggregates;
+﻿using CatalogService.Domain.Aggregates;
 
+using ECommercePlatform.Application.Interfaces;
 using ECommercePlatform.Domain.Abstractions;
 using ECommercePlatform.Domain.Events;
 

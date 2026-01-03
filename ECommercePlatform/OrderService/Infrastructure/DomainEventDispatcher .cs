@@ -3,7 +3,7 @@ using ECommercePlatform.Domain.Events;
 
 using MediatR;
 
-namespace CatalogService.Infrastructure
+namespace OrderService.Infrastructure
 {
     public class DomainEventDispatcher
         (IMediator mediator) : IDomainEventDispatcher

@@ -18,7 +18,7 @@ namespace InventoryService.Infrastructure.Persistence
             this.dispatcher = dispatcher;
         }
 
-        public DbSet<ProductStock> ProductStock { get; set; }
+        public DbSet<ProductStock> ProductStocks { get; set; }
         public DbSet<StockReservation> StockReservations { get; set; }
 
         public override async Task<int> SaveChangesAsync(

@@ -32,7 +32,7 @@ namespace InventoryService.Domain.Aggregates
 
             if (AvailableQuantity < quantity)
             {
-                AddDomainEvent(new StockReservationFailedDomainEvent(orderId, ProductId));
+                AddDomainEvent(new StockReservationFailedDomainEvent(orderId, ProductId, ProductVariantId, "No available quantity."));
 
                 return;
             }
@@ -42,7 +42,7 @@ namespace InventoryService.Domain.Aggregates
             Reservations.Add(new StockReservation(orderId, quantity));
 
             AddDomainEvent(new StockReservedDomainEvent(
-                orderId, ProductId, quantity));
+                orderId, ProductId, ProductVariantId, quantity));
         }
 
         public void Release(Guid orderId)
@@ -57,7 +57,7 @@ namespace InventoryService.Domain.Aggregates
             reservation.Release();
 
             AddDomainEvent(new StockReleasedDomainEvent(
-                orderId, ProductId));
+                orderId, ProductId, ProductVariantId));
         }
 
         public void Confirm(Guid orderId)

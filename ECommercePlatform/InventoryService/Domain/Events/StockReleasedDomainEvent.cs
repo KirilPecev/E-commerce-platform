@@ -9,14 +9,17 @@ namespace InventoryService.Domain.Events
     {
         public Guid OrderId { get; }
         public Guid ProductId { get; }
+        public Guid ProductVariantId { get; }
         public DateTime OccurredOn { get; } = DateTime.UtcNow;
 
         public StockReleasedDomainEvent(
             Guid orderId,
-            Guid productId)
+            Guid productId,
+            Guid productVariantId)
         {
             OrderId = orderId;
             ProductId = productId;
+            ProductVariantId = productVariantId;
         }
     }
 }

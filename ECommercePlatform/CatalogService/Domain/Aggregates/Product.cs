@@ -33,8 +33,6 @@ namespace CatalogService.Domain.Aggregates
             Status = ProductStatus.Active;
             Description = description;
             CreatedAt = DateTime.UtcNow;
-
-            AddDomainEvent(new ProductCreatedDomainEvent(Id));
         }
 
         public Guid AddProductVariant(string sku, decimal amount, string currency, int stockQuantity, string? size, string? color)
@@ -46,7 +44,7 @@ namespace CatalogService.Domain.Aggregates
 
             Variants.Add(productVariant);
 
-            AddDomainEvent(new ProductCreatedDomainEvent(Id));
+            AddDomainEvent(new ProductCreatedDomainEvent(Id, productVariant.Id, stockQuantity));
 
             return productVariant.Id;
         }

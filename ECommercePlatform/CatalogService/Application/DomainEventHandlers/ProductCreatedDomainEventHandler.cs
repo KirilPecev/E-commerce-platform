@@ -16,6 +16,8 @@ namespace CatalogService.Application.DomainEventHandlers
             await eventPublisher.PublishAsync(new ProductCreatedIntegrationEvent
             {
                 ProductId = notification.ProductId,
+                ProductVariantId = notification.ProductVariantId,
+                InitialQuantity = notification.InitialQuantity,
                 OccurredOn = notification.OccurredOn
             });
         }

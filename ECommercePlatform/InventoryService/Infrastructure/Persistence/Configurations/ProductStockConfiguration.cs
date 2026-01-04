@@ -3,7 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InventoryService.Infrastructure.Configurations
+namespace InventoryService.Infrastructure.Persistence.Configurations
 {
     public class ProductStockConfiguration : IEntityTypeConfiguration<ProductStock>
     {

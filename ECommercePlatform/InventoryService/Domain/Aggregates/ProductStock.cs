@@ -25,6 +25,14 @@ namespace InventoryService.Domain.Aggregates
             AvailableQuantity = initialQuantity;
         }
 
+        public void UpdateQuantity(int quantity)
+        {
+            if (quantity < 0)
+                throw new InventoryDomainException("Quantity cannot be negative.");
+
+            AvailableQuantity = quantity;
+        }
+
         public void Reserve(Guid orderId, int quantity)
         {
             if (quantity <= 0)

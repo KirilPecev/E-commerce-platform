@@ -65,8 +65,6 @@ namespace CatalogService.Domain.Aggregates
             Name = name;
             Category = category;
             Description = description;
-
-            AddDomainEvent(new ProductUpdatedDomainEvent(Id));
         }
 
         public void Deactivate()

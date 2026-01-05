@@ -14,7 +14,7 @@ namespace InventoryService.Infrastructure.Messaging.Consumers
     {
         public async Task Consume(ConsumeContext<ProductCreatedIntegrationEvent> context)
         {
-            var message = context.Message;
+            ProductCreatedIntegrationEvent message = context.Message;
 
             await mediator.Send(new CreateProductStockCommand(message.ProductId, message.ProductVariantId, message.InitialQuantity));
         }

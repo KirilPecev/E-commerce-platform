@@ -1,10 +1,11 @@
-﻿using CatalogService.Domain.ValueObjects;
+﻿using CatalogService.Domain.Events;
+using CatalogService.Domain.ValueObjects;
 
-using ECommercePlatform.Domain;
+using ECommercePlatform.Domain.Abstractions;
 
 namespace CatalogService.Domain.Aggregates
 {
-    public class ProductVariant : Entity
+    public class ProductVariant : AggregateRoot
     {
         public Product Product { get; private set; }
         public string Sku { get; private set; }
@@ -41,6 +42,8 @@ namespace CatalogService.Domain.Aggregates
             Size = size;
             Color = color;
             StockQuantity = stockQuantity;
+
+            AddDomainEvent(new ProductUpdatedDomainEvent(Product.Id, Id, stockQuantity));
         }
 
         public void ChangePrice(Money price)

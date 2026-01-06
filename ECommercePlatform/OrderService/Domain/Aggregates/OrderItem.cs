@@ -7,6 +7,7 @@ namespace OrderService.Domain.Aggregates
 {
     public class OrderItem : Entity
     {
+        public Guid ProductId { get; private set; }
         public Guid ProductVariantId { get; private set; }
         public string ProductName { get; private set; }
         public int Quantity { get; private set; }
@@ -21,9 +22,10 @@ namespace OrderService.Domain.Aggregates
             UnitPrice = default!;
         }
 
-        public OrderItem(Guid productVariantId, string productName, Money unitPrice, int quantity)
+        public OrderItem(Guid productId, Guid productVariantId, string productName, Money unitPrice, int quantity)
         {
             Id = Guid.NewGuid();
+            ProductId = productId;
             ProductName = productName;
             ProductVariantId = productVariantId;
             UnitPrice = unitPrice;

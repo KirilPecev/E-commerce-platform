@@ -31,11 +31,9 @@ namespace OrderService.Domain.Aggregates
             CustomerId = customerId;
             CreatedAt = DateTime.UtcNow;
             Status = OrderStatus.Draft;
-
-            this.AddDomainEvent(new OrderCreatedDomainEvent(Id));
         }
 
-        public void AddItem(Guid productVariantId, string name, Money price, int quantity)
+        public void AddItem(Guid productId, Guid productVariantId, string name, Money price, int quantity)
         {
             if (Status != OrderStatus.Draft)
                 throw new OrderDomainException("Cannot modify a finalized order.");
@@ -47,10 +45,12 @@ namespace OrderService.Domain.Aggregates
             }
             else
             {
-                Items.Add(new OrderItem(productVariantId, name, price, quantity));
+                Items.Add(new OrderItem(productId, productVariantId, name, price, quantity));
             }
 
             RecalculateTotal();
+
+            this.AddDomainEvent(new OrderCreatedDomainEvent(Id, productId, productVariantId, quantity));
         }
 
         public void MarkAsPaid()

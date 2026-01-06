@@ -4,6 +4,7 @@ namespace OrderService.Application.Orders.Commands
 {
     public record CreateOrderCommand(
         Guid CustomerId,
+        Guid ProductId,
         Guid ProductVariantId,
         string ProductName,
         decimal Price,

@@ -16,7 +16,7 @@ namespace OrderService.Application.Orders.Commands
 
             await ordersDbContext.Orders.AddAsync(order, cancellationToken);
 
-            order.AddItem(request.ProductVariantId, request.ProductName, new Money(request.Price, request.Currency), request.Quantity);
+            order.AddItem(request.ProductId, request.ProductVariantId, request.ProductName, new Money(request.Price, request.Currency), request.Quantity);
 
             await ordersDbContext.SaveChangesAsync(cancellationToken);
 

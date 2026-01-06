@@ -11,6 +11,9 @@ namespace OrderService.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(oi => oi.Id);
 
+            builder.Property(oi => oi.ProductId)
+                .IsRequired();
+
             builder.Property(oi => oi.ProductVariantId)
                 .IsRequired();
 

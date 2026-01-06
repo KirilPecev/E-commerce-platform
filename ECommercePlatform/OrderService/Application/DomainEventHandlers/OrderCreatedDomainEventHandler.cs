@@ -15,6 +15,9 @@ namespace OrderService.Application.DomainEventHandlers
             await eventPublisher.PublishAsync(new OrderCreatedIntegrationEvent
             {
                 OrderId = notification.OrderId,
+                ProductId = notification.ProductId,
+                ProductVariantId = notification.ProductVariantId,
+                Quantity = notification.Quantity,
                 OccurredOn = notification.OccurredOn
             });
         }

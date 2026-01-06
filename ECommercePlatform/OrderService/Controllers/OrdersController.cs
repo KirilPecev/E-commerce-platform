@@ -19,6 +19,7 @@ namespace OrderService.Controllers
         {
             CreateOrderCommand command = new CreateOrderCommand(
                 request.CustomerId,
+                request.ProductId,
                 request.ProductVariantId,
                 request.ProductName,
                 request.Price,
@@ -67,6 +68,7 @@ namespace OrderService.Controllers
         {
             AddItemCommand command = new AddItemCommand(
                 orderId,
+                request.ProductId,
                 request.ProductVariantId,
                 request.ProductName,
                 request.Price,

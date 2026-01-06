@@ -2,6 +2,7 @@
 {
     public record CreateOrderRequest(
         Guid CustomerId,
+        Guid ProductId,
         Guid ProductVariantId,
         string ProductName,
         decimal Price,

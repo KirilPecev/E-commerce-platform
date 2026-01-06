@@ -119,6 +119,8 @@ namespace OrderService.Domain.Aggregates
             Items.Remove(itemToRemove);
 
             RecalculateTotal();
+
+            this.AddDomainEvent(new OrderItemRemovedDomainEvent(Id, itemToRemove.ProductId, itemToRemove.ProductVariantId));
         }
 
         private void RecalculateTotal()

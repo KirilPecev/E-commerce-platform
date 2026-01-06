@@ -78,5 +78,17 @@ namespace InventoryService.Domain.Aggregates
 
             reservation.Confirm();
         }
+
+        public bool HasReservedStockForOrder(Guid orderId)
+            => Reservations
+            .Where(r => r.OrderId == orderId
+                     && (r.Status == ReservationStatus.Pending || r.Status == ReservationStatus.Confirmed))
+            .Any();
+
+        public bool HasReservedPendingStockForOrder(Guid orderId)
+            => Reservations
+            .Where(r => r.OrderId == orderId
+                     && r.Status == ReservationStatus.Pending)
+            .Any();
     }
 }

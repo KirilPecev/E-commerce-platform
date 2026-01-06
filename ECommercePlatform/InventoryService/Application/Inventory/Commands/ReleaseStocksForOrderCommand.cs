@@ -2,7 +2,8 @@
 
 namespace InventoryService.Application.Inventory.Commands
 {
-    public record ConfirmStockCommand(
-        Guid OrderId
+    public record ReleaseStocksForOrderCommand(
+        Guid OrderId,
+        string Reason
         ) : IRequest;
 }

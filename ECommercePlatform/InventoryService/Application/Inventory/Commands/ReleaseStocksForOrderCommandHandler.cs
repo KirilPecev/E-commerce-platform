@@ -4,23 +4,21 @@ using InventoryService.Infrastructure.Persistence;
 
 using MediatR;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace InventoryService.Application.Inventory.Commands
 {
-    public class ConfirmStockCommandHandler
-        (InventoryDbContext inventoryDbContext) : IRequestHandler<ConfirmStockCommand>
+    public class ReleaseStocksForOrderCommandHandler
+        (InventoryDbContext inventoryDbContext) : IRequestHandler<ReleaseStocksForOrderCommand>
     {
-        public async Task Handle(ConfirmStockCommand request, CancellationToken cancellationToken)
+        public async Task Handle(ReleaseStocksForOrderCommand request, CancellationToken cancellationToken)
         {
             List<ProductStock> productStocks = inventoryDbContext
                  .ProductStocks
-                 .Where(ps => ps.HasReservedPendingStockForOrder(request.OrderId))
+                 .Where(ps => ps.HasReservedStockForOrder(request.OrderId))
                  .ToList();
 
             foreach (ProductStock productStock in productStocks)
             {
-                productStock.Confirm(request.OrderId);
+                productStock.Release(request.OrderId);
             }
 
             await inventoryDbContext.SaveChangesAsync(cancellationToken);

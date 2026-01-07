@@ -12,20 +12,20 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["OrderService/OrderService.csproj", "OrderService/"]
+COPY ["InventoryService/InventoryService.csproj", "InventoryService/"]
 COPY ["ECommercePlatform/ECommercePlatform.csproj", "ECommercePlatform/"]
-RUN dotnet restore "./OrderService/OrderService.csproj"
+RUN dotnet restore "./InventoryService/InventoryService.csproj"
 COPY . .
-WORKDIR "/src/OrderService"
-RUN dotnet build "./OrderService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/InventoryService"
+RUN dotnet build "./InventoryService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./OrderService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./InventoryService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "OrderService.dll"]
+ENTRYPOINT ["dotnet", "InventoryService.dll"]

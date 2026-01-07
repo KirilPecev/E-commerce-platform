@@ -12,6 +12,10 @@ namespace InventoryService.Domain.Aggregates
         public int AvailableQuantity { get; private set; }
         public List<StockReservation> Reservations { get; private set; } = new();
 
+        public int ReservedQuantity => Reservations
+            .Where(r => r.Status == ReservationStatus.Pending || r.Status == ReservationStatus.Confirmed)
+            .Sum(r => r.Quantity);
+
         private ProductStock() { }
 
         public ProductStock(Guid productId, Guid productVariantId, int initialQuantity)

@@ -1,6 +1,87 @@
 @OrderService_HostAddress = http://localhost:5144
+@SampleCustomerId = 22222222-2222-2222-2222-222222222222
+@SampleProductId = 33333333-3333-3333-3333-333333333333
+@SampleProductVariantId = 44444444-4444-4444-4444-444444444444
+@SampleOrderId = 55555555-5555-5555-5555-555555555555
+@SampleItemId = 66666666-6666-6666-6666-666666666666
 
-GET {{OrderService_HostAddress}}/weatherforecast/
+### Create order
+POST {{OrderService_HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "{{SampleCustomerId}}",
+  "productId": "{{SampleProductId}}",
+  "productVariantId": "{{SampleProductVariantId}}",
+  "productName": "Sample Product",
+  "price": 19.99,
+  "currency": "USD",
+  "quantity": 2
+}
+
+###
+
+### Get order by id
+GET {{OrderService_HostAddress}}/api/orders/{{SampleOrderId}}
+Accept: application/json
+
+###
+
+### Add item to order
+POST {{OrderService_HostAddress}}/api/orders/{{SampleOrderId}}/items
+Content-Type: application/json
+
+{
+  "productId": "{{SampleProductId}}",
+  "productVariantId": "{{SampleProductVariantId}}",
+  "productName": "Another Product",
+  "price": 9.99,
+  "currency": "USD",
+  "quantity": 1
+}
+
+###
+
+### Set order address
+PUT {{OrderService_HostAddress}}/api/orders/{{SampleOrderId}}/address
+Content-Type: application/json
+
+{
+  "street": "123 Main St",
+  "city": "Anytown",
+  "zipCode": "12345",
+  "country": "USA"
+}
+
+###
+
+### Cancel order
+POST {{OrderService_HostAddress}}/api/orders/{{SampleOrderId}}/cancel
+Content-Type: application/json
+
+{
+  "reason": "Customer request"
+}
+
+###
+
+### Pay for order
+POST {{OrderService_HostAddress}}/api/orders/{{SampleOrderId}}/pay
+
+###
+
+### Ship order
+POST {{OrderService_HostAddress}}/api/orders/{{SampleOrderId}}/ship
+Content-Type: application/json
+
+{
+  "trackingNumber": "TRACK123456"
+}
+
+###
+
+### Get all orders for a customer
+GET {{OrderService_HostAddress}}/api/orders/customer/{{SampleCustomerId}}
 Accept: application/json
 
 ###

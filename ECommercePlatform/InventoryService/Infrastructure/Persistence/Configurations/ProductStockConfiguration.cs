@@ -25,6 +25,8 @@ namespace InventoryService.Infrastructure.Persistence.Configurations
                 .HasForeignKey("ProductStockId")
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Ignore(ps => ps.ReservedQuantity);
         }
     }
 }

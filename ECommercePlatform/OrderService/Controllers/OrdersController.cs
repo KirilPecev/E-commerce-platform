@@ -137,7 +137,7 @@ namespace OrderService.Controllers
         }
 
         [HttpPost("{orderId:guid}/ship")]
-        public async Task<IActionResult> Pay(Guid orderId, ShipOrderRequest request)
+        public async Task<IActionResult> Ship(Guid orderId, ShipOrderRequest request)
         {
             ShipOrderCommand command = new ShipOrderCommand(orderId, request.TrackingNumber);
 

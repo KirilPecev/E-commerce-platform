@@ -1,0 +1,53 @@
+﻿using ECommercePlatform.Application.Interfaces;
+
+using MassTransit;
+
+using Microsoft.EntityFrameworkCore;
+
+using PaymentService.Infrastructure.Messaging;
+using PaymentService.Infrastructure.Persistence;
+
+namespace PaymentService.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            // DbContext
+            services
+                .AddDbContext<PaymentDbContext>(options =>
+                    options.UseSqlServer(
+                        configuration.GetConnectionString("PaymentDb"),
+                        sqlOptions => sqlOptions.MigrationsAssembly(typeof(PaymentDbContext).Assembly.FullName)));
+
+            // Domain event dispatcher
+            services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+            // Integration event publisher
+            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
+
+            // MassTransit + RabbitMQ
+            services.AddMassTransit(x =>
+            {
+                x.SetKebabCaseEndpointNameFormatter();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var rabbitMqHost = configuration["RabbitMQ:Host"] ?? throw new InvalidOperationException("RabbitMQ:Host configuration is missing.");
+                    var rabbitMqUsername = configuration["RabbitMQ:Username"] ?? throw new InvalidOperationException("RabbitMQ:Username configuration is missing.");
+                    var rabbitMqPassword = configuration["RabbitMQ:Password"] ?? throw new InvalidOperationException("RabbitMQ:Password configuration is missing.");
+
+                    cfg.Host(rabbitMqHost, h =>
+                    {
+                        h.Username(rabbitMqUsername);
+                        h.Password(rabbitMqPassword);
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
+
+            return services;
+        }
+    }
+}

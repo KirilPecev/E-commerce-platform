@@ -14,7 +14,10 @@ namespace PaymentService.Domain.Aggregates
         public PaymentMethod PaymentMethod { get; private set; }
         public DateTime ProcessedAt { get; private set; }
 
-        private Payment() { }
+        private Payment()
+        {
+            Amount = default!;
+        }
 
         public Payment(Guid orderId, Money amount)
         {
@@ -35,6 +38,17 @@ namespace PaymentService.Domain.Aggregates
 
             AddDomainEvent(
                 new PaymentCompletedDomainEvent(Id, OrderId));
+        }
+
+        public void MarkAsFailed()
+        {
+            if (Status != PaymentStatus.Pending)
+                throw new PaymentDomainException("Payment is not pending.");
+
+            Status = PaymentStatus.Failed;
+
+            AddDomainEvent(
+                new PaymentFailedDomainEvent(Id, OrderId));
         }
 
         public void Refund()

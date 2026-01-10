@@ -1,6 +1,21 @@
-@PaymentService_HostAddress = http://localhost:5195
+@PaymentService_HostAddress = http://localhost:5200
+@SampleOrderId = 77777777-7777-7777-7777-777777777777
+@SamplePaymentId = 88888888-8888-8888-8888-888888888888
+@CardNumber = 4111111111111111
+@CardHolder = Test User
+@Expiry = 12/30
+@Cvv = 123
 
-GET {{PaymentService_HostAddress}}/weatherforecast/
-Accept: application/json
+### Pay with card 
+POST {{PaymentService_HostAddress}}/api/payment/pay
+Content-Type: application/json
+
+{
+  "paymentId": "{{SamplePaymentId}}",
+  "cardNumber": "{{CardNumber}}",
+  "cardHolder": "{{CardHolder}}",
+  "expiry": "{{Expiry}}",
+  "cvv": "{{Cvv}}"
+}
 
 ###

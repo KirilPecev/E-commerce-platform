@@ -40,7 +40,7 @@ namespace PaymentService.Domain.Aggregates
                 new PaymentCompletedDomainEvent(Id, OrderId));
         }
 
-        public void MarkAsFailed()
+        public void MarkAsFailed(string? failureReason)
         {
             if (Status != PaymentStatus.Pending)
                 throw new PaymentDomainException("Payment is not pending.");
@@ -48,7 +48,7 @@ namespace PaymentService.Domain.Aggregates
             Status = PaymentStatus.Failed;
 
             AddDomainEvent(
-                new PaymentFailedDomainEvent(Id, OrderId));
+                new PaymentFailedDomainEvent(Id, OrderId, failureReason));
         }
 
         public void Refund()

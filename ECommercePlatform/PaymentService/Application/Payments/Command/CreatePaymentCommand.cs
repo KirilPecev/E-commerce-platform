@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace PaymentService.Application.Command
+namespace PaymentService.Application.Payments.Command
 {
     public record CreatePaymentCommand(
         Guid OrderId,

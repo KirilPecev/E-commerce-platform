@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PaymentService.Domain.Aggregates;
 using PaymentService.Infrastructure.Persistence;
 
-namespace PaymentService.Application.Command
+namespace PaymentService.Application.Payments.Command
 {
     public class PayPaymentCommandHandler
         (PaymentDbContext paymentDbContext) : IRequestHandler<PayPaymentCommand>

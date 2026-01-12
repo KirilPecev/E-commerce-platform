@@ -5,7 +5,7 @@ using PaymentService.Domain.Aggregates;
 using PaymentService.Domain.ValueObjects;
 using PaymentService.Infrastructure.Persistence;
 
-namespace PaymentService.Application.Command
+namespace PaymentService.Application.Payments.Command
 {
     public class CreatePaymentCommandHandler
         (PaymentDbContext paymentDbContext) : IRequestHandler<CreatePaymentCommand, Guid>

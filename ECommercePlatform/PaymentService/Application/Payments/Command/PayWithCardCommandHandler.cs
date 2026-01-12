@@ -8,7 +8,7 @@ using PaymentService.Application.Models;
 using PaymentService.Domain.Aggregates;
 using PaymentService.Infrastructure.Persistence;
 
-namespace PaymentService.Application.Command
+namespace PaymentService.Application.Payments.Command
 {
     public class PayWithCardCommandHandler
         (PaymentDbContext paymentDbContext,

@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using PaymentService.Application.Command;
+using PaymentService.Application.Payments.Command;
 using PaymentService.Contracts.Requests;
 
 namespace PaymentService.Controllers

@@ -29,4 +29,8 @@
     <ProjectReference Include="..\ECommercePlatform\ECommercePlatform.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Messaging\Consumers\" />
+  </ItemGroup>
+
 </Project>

@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="MassTransit.RabbitMQ" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="14.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
@@ -28,7 +30,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Domain\" />
     <Folder Include="Infrastructure\Persistence\Migrations\" />
-    <Folder Include="Application\" />
   </ItemGroup>
 
   <ItemGroup>

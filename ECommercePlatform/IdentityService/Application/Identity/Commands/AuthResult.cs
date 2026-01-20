@@ -2,6 +2,6 @@
 {
     public record AuthResult(
         Guid UserId,
-        string token
+        string Token
         );
 }

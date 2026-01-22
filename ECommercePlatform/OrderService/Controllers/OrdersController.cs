@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using ECommercePlatform.Identity;
 
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using OrderService.Application.Orders.Commands;
@@ -14,6 +17,7 @@ namespace OrderService.Controllers
     public class OrdersController
         (IMediator mediator) : ControllerBase
     {
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOrderRequest request)
         {
@@ -34,6 +38,7 @@ namespace OrderService.Controllers
                 new { Id = orderId });
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -62,6 +67,7 @@ namespace OrderService.Controllers
             return Ok(order);
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpPost("{orderId:guid}/items")]
 
         public async Task<IActionResult> AddItemToOrder(Guid orderId, AddItemRequest request)
@@ -83,6 +89,7 @@ namespace OrderService.Controllers
                 new { Id = orderId });
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpPut("{orderId:guid}/address")]
         public async Task<IActionResult> SetAddress(Guid orderId, SetOrderAddressRequest request)
         {
@@ -101,6 +108,7 @@ namespace OrderService.Controllers
                 new { Id = orderId });
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpDelete("{orderId:guid}/items/{itemId:guid}")]
         public async Task<IActionResult> RemoveItemFromOrder(Guid orderId, Guid itemId)
         {
@@ -114,6 +122,7 @@ namespace OrderService.Controllers
                 new { Id = orderId });
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpPost("{orderId:guid}/cancel")]
         public async Task<IActionResult> Cancel(Guid orderId, CancelOrderRequest request)
         {
@@ -126,6 +135,7 @@ namespace OrderService.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpPost("{orderId:guid}/pay")]
         public async Task<IActionResult> Pay(Guid orderId)
         {
@@ -136,6 +146,7 @@ namespace OrderService.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("{orderId:guid}/ship")]
         public async Task<IActionResult> Ship(Guid orderId, ShipOrderRequest request)
         {
@@ -146,6 +157,7 @@ namespace OrderService.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpGet("customer/{customerId:guid}")]
         public async Task<IActionResult> GetAllOrdersForCustomer(Guid customerId)
         {

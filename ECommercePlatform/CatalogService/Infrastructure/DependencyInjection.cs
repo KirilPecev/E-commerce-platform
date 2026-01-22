@@ -2,6 +2,7 @@
 using CatalogService.Infrastructure.Persistence;
 
 using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Identity;
 
 using MassTransit;
 
@@ -46,6 +47,8 @@ namespace CatalogService.Infrastructure
                     cfg.ConfigureEndpoints(context);
                 });
             });
+
+            services.AddTokenAuthentication(configuration);
 
             return services;
         }

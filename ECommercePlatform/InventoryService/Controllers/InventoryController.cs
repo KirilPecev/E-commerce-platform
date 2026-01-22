@@ -1,8 +1,11 @@
-﻿using InventoryService.Application.Inventory.Queries;
+﻿using ECommercePlatform.Identity;
+
+using InventoryService.Application.Inventory.Queries;
 using InventoryService.Contracts.Responses;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryService.Controllers
@@ -12,6 +15,7 @@ namespace InventoryService.Controllers
     public class InventoryController
         (IMediator mediator) : ControllerBase
     {
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpGet("{productId:guid}")]
         public async Task<IActionResult> GetAvaiableStocksForProduct(Guid productId)
         {

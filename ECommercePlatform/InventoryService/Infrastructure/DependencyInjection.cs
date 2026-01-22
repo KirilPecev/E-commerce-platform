@@ -1,4 +1,5 @@
 ﻿using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Identity;
 
 using InventoryService.Infrastructure.Messaging;
 using InventoryService.Infrastructure.Persistence;
@@ -46,6 +47,8 @@ namespace InventoryService.Infrastructure
                     cfg.ConfigureEndpoints(context);
                 });
             });
+
+            services.AddTokenAuthentication(configuration);
 
             return services;
         }

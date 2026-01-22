@@ -1,12 +1,9 @@
-﻿using System.Text;
+﻿using ECommercePlatform.Identity;
 
-using IdentityService.Application;
 using IdentityService.Infrastructure.Persistence;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityService.Infrastructure
 {
@@ -33,26 +30,7 @@ namespace IdentityService.Infrastructure
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
-            string secret = configuration
-                .GetSection(nameof(ApplicationSettings))
-                .GetValue<string>(nameof(ApplicationSettings.Secret))!;
-
-            byte[] key = Encoding.ASCII.GetBytes(secret);
-
-            services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
-                    };
-                });
+            services.AddTokenAuthentication(configuration);
 
             services.AddTransient<IJwtTokenGenerator, JwtTokenGeneratorService>();
 

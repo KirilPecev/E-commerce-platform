@@ -1,4 +1,5 @@
 ﻿using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Identity;
 
 using MassTransit;
 
@@ -46,6 +47,8 @@ namespace OrderService.Infrastructure
                     cfg.ConfigureEndpoints(context);
                 });
             });
+
+            services.AddTokenAuthentication(configuration);
 
             return services;
         }

@@ -3,8 +3,11 @@ using CatalogService.Application.Products.Queries;
 using CatalogService.Contracts.Requests;
 using CatalogService.Contracts.Responses;
 
+using ECommercePlatform.Identity;
+
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogService.Controllers
@@ -14,6 +17,7 @@ namespace CatalogService.Controllers
     public class ProductsController
         (IMediator mediator) : ControllerBase
     {
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProductRequest request)
         {
@@ -66,6 +70,7 @@ namespace CatalogService.Controllers
             return Ok(responses);
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request)
         {
@@ -85,6 +90,7 @@ namespace CatalogService.Controllers
                 new { Id = id });
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Deactivate(Guid id)
         {
@@ -95,6 +101,7 @@ namespace CatalogService.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("{id:guid}/activate")]
         public async Task<IActionResult> Activate(Guid id)
         {
@@ -105,6 +112,7 @@ namespace CatalogService.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("{id:guid}/variants")]
         public async Task<IActionResult> AddVariant(Guid id, [FromBody] AddProductVariantRequest request)
         {
@@ -163,6 +171,7 @@ namespace CatalogService.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{productId:guid}/variants/{variantId:guid}")]
         public async Task<IActionResult> DeleteProductVariant(Guid productId, Guid variantId)
         {
@@ -173,6 +182,7 @@ namespace CatalogService.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{productId:guid}/variants/{variantId:guid}")]
         public async Task<IActionResult> UpdateProductVariant(Guid productId, Guid variantId, [FromBody] UpdateProductVariantRequest request)
         {

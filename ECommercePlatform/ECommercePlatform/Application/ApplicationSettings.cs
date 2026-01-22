@@ -1,4 +1,4 @@
-﻿namespace IdentityService.Application
+﻿namespace ECommercePlatform.Application
 {
     public class ApplicationSettings
     {

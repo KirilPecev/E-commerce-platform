@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-using IdentityService.Application;
+using ECommercePlatform.Application;
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

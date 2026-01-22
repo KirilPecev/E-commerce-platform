@@ -1,4 +1,6 @@
-﻿namespace IdentityService.Application
+﻿using ECommercePlatform.Application;
+
+namespace IdentityService.Application
 {
     public static class DependencyInjection
     {

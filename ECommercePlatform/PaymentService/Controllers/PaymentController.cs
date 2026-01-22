@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using ECommercePlatform.Identity;
 
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using PaymentService.Application.Payments.Command;
@@ -12,6 +15,7 @@ namespace PaymentService.Controllers
     public class PaymentController
         (IMediator mediator) : ControllerBase
     {
+        [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
         [HttpPost("pay")]
         public async Task<IActionResult> PayWithCard([FromBody] PayWithCardRequest request, CancellationToken cancellationToken)
         {

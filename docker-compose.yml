@@ -1,7 +1,133 @@
 version: "3.8"
 
-rabbitmq:
-  image: rabbitmq:3-management
-  ports:
-    - "5672:5672"
-    - "15672:15672"
+services:
+
+  data:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    ports: 
+        - "1433:1433"
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=yourStrongPassword12!@
+    volumes: 
+        - sqldata:/var/opt/mssql 
+    networks: 
+        - ecommerce_net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmqUser
+      RABBITMQ_DEFAULT_PASS: rabbitmqPassword12!
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - ecommerce_net
+
+  identity:
+    build:
+      context: ./ECommercePlatform
+      dockerfile: IdentityService/Dockerfile
+    ports:
+      - "5002:80"
+    environment:
+      - ConnectionStrings__IdentityDb=Server=sqlserver;Database=IdentityDb;Trusted_Connection=True;TrustServerCertificate=True
+    restart: on-failure
+    volumes:
+      - data-protection:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      - data
+    networks:
+      - ecommerce_net
+    
+  catalog:
+    build:
+      context: ./ECommercePlatform
+      dockerfile: CatalogService/Dockerfile
+    ports:
+      - "5001:80"
+    environment:
+      - ConnectionStrings__CatalogDb=Server=sqlserver;Database=CatalogDb;Trusted_Connection=True;TrustServerCertificate=True
+      - MessageQueueSettings__Host=rabbitmq
+      - MessageQueueSettings__UserName=rabbitmqUser
+      - MessageQueueSettings__Password=rabbitmqPassword12!
+    restart: on-failure
+    volumes:
+      - data-protection:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      - data
+      - rabbitmq
+    networks:
+      - ecommerce_net
+
+  inventory:
+    build:
+      context: ./ECommercePlatform
+      dockerfile: InventoryService/Dockerfile
+    ports:
+      - "5003:80"
+    environment:
+      - ConnectionStrings__InventoryDb=Server=sqlserver;Database=InventoryDb;Trusted_Connection=True;TrustServerCertificate=True
+      - MessageQueueSettings__Host=rabbitmq
+      - MessageQueueSettings__UserName=rabbitmqUser
+      - MessageQueueSettings__Password=rabbitmqPassword12!
+    restart: on-failure
+    volumes:
+      - data-protection:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      - data
+      - rabbitmq
+    networks:
+      - ecommerce_net
+
+  order:
+    build:
+      context: ./ECommercePlatform
+      dockerfile: OrderService/Dockerfile
+    ports:
+      - "5004:80"
+    environment:
+      - ConnectionStrings__OrderDb=Server=sqlserver;Database=OrderDb;Trusted_Connection=True;TrustServerCertificate=True
+      - MessageQueueSettings__Host=rabbitmq
+      - MessageQueueSettings__UserName=rabbitmqUser
+      - MessageQueueSettings__Password=rabbitmqPassword12!
+    restart: on-failure
+    volumes:
+      - data-protection:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      - data
+      - rabbitmq
+    networks:
+      - ecommerce_net
+
+  payment:
+    build:
+      context: ./ECommercePlatform
+      dockerfile: PaymentService/Dockerfile
+    ports:
+      - "5005:80"
+    environment:
+      - ConnectionStrings__PaymentDb=Server=sqlserver;Database=PaymentDb;Trusted_Connection=True;TrustServerCertificate=True
+      - MessageQueueSettings__Host=rabbitmq
+      - MessageQueueSettings__UserName=rabbitmqUser
+      - MessageQueueSettings__Password=rabbitmqPassword12!
+    restart: on-failure
+    volumes:
+      - data-protection:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      - data
+      - rabbitmq
+    networks:
+      - ecommerce_net
+
+networks:
+  ecommerce_net:
+
+volumes:
+  rabbitmq_data:
+  data-protection:

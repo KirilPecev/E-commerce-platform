@@ -7,9 +7,10 @@ services:
     image: mcr.microsoft.com/mssql/server:2025-latest
     ports: 
         - "1433:1433"
+    env_file:
+      - Common.env
     environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=yourStrongPassword12!@
+      - ACCEPT_EULA=Y
     volumes: 
         - sqldata:/var/opt/mssql 
     networks: 
@@ -21,9 +22,10 @@ services:
       - "5672:5672"
       - "15672:15672"
     hostname: rabbitmq
+    env_file:
+      - Common.env
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmqUser
-      RABBITMQ_DEFAULT_PASS: rabbitmqPassword12!
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -34,7 +36,9 @@ services:
       context: ./ECommercePlatform
       dockerfile: IdentityService/Dockerfile
     ports:
-      - "5002:80"
+      - "5001:80"
+    env_file:
+      - Common.env
     environment:
       - ConnectionStrings__IdentityDb=Server=sqlserver;Database=IdentityDb;Trusted_Connection=True;TrustServerCertificate=True
     restart: on-failure
@@ -50,12 +54,14 @@ services:
       context: ./ECommercePlatform
       dockerfile: CatalogService/Dockerfile
     ports:
-      - "5001:80"
+      - "5002:80"
+    env_file:
+      - Common.env
     environment:
       - ConnectionStrings__CatalogDb=Server=sqlserver;Database=CatalogDb;Trusted_Connection=True;TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=rabbitmqPassword12!
+      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -71,11 +77,13 @@ services:
       dockerfile: InventoryService/Dockerfile
     ports:
       - "5003:80"
+    env_file:
+      - Common.env
     environment:
       - ConnectionStrings__InventoryDb=Server=sqlserver;Database=InventoryDb;Trusted_Connection=True;TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=rabbitmqPassword12!
+      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -91,11 +99,14 @@ services:
       dockerfile: OrderService/Dockerfile
     ports:
       - "5004:80"
+    env_file:
+      - Common.env
     environment:
       - ConnectionStrings__OrderDb=Server=sqlserver;Database=OrderDb;Trusted_Connection=True;TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=rabbitmqPassword12!
+      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
+    
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -111,11 +122,13 @@ services:
       dockerfile: PaymentService/Dockerfile
     ports:
       - "5005:80"
+    env_file:
+      - Common.env
     environment:
       - ConnectionStrings__PaymentDb=Server=sqlserver;Database=PaymentDb;Trusted_Connection=True;TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=rabbitmqPassword12!
+      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys

@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\**" />
+    <Content Remove="Domain\**" />
+    <EmbeddedResource Remove="Domain\**" />
+    <None Remove="Domain\**" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<PackageReference Include="MassTransit.RabbitMQ" Version="9.0.0" />
     <PackageReference Include="MediatR" Version="14.0.0" />
     
@@ -28,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
     <Folder Include="Infrastructure\Persistence\Migrations\" />
   </ItemGroup>
 

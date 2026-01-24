@@ -1,4 +1,6 @@
 ﻿
+using ECommercePlatform.Identity;
+
 using IdentityService.Application.Exceptions;
 using IdentityService.Infrastructure;
 
@@ -27,9 +29,9 @@ namespace IdentityService.Application.Identity.Commands
                 throw new IdentityException("User registration failed", result.Errors);
             }
 
-            await userManager.AddToRoleAsync(user, UserRoles.Customer.ToString());
+            await userManager.AddToRoleAsync(user, Roles.Customer);
 
-            string token = jwt.GenerateToken(user, new List<string>() { UserRoles.Customer.ToString() });
+            string token = jwt.GenerateToken(user, new List<string>() { Roles.Customer });
 
             return new AuthResult(
                 user.Id,

@@ -1,6 +1,7 @@
 ﻿using ECommercePlatform.Identity;
 
 using IdentityService.Infrastructure.Persistence;
+using IdentityService.Infrastructure.Persistence.Seeding;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,18 @@ namespace IdentityService.Infrastructure
             services.AddTransient<IJwtTokenGenerator, JwtTokenGeneratorService>();
 
             return services;
+        }
+
+        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app)
+        {
+            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            RoleManager<Role> roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
+
+            await RoleSeeder.SeedRolesAsync(roleManager);
+
+            return app;
         }
     }
 }

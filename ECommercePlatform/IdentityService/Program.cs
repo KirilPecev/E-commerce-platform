@@ -1,6 +1,8 @@
 using IdentityService.Application;
 using IdentityService.Infrastructure;
 
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,5 +30,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.Initialize();
 
 app.Run();

@@ -40,7 +40,7 @@ services:
     env_file:
       - Common.env
     environment:
-      - ConnectionStrings__IdentityDb=Server=sqlserver;Database=IdentityDb;Trusted_Connection=True;TrustServerCertificate=True
+      - ConnectionStrings__IdentityDb=Server=sqlserver;Database=IdentityDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -58,7 +58,7 @@ services:
     env_file:
       - Common.env
     environment:
-      - ConnectionStrings__CatalogDb=Server=sqlserver;Database=CatalogDb;Trusted_Connection=True;TrustServerCertificate=True
+      - ConnectionStrings__CatalogDb=Server=sqlserver;Database=CatalogDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
       - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
@@ -80,7 +80,7 @@ services:
     env_file:
       - Common.env
     environment:
-      - ConnectionStrings__InventoryDb=Server=sqlserver;Database=InventoryDb;Trusted_Connection=True;TrustServerCertificate=True
+      - ConnectionStrings__InventoryDb=Server=sqlserver;Database=InventoryDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
       - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
@@ -102,7 +102,7 @@ services:
     env_file:
       - Common.env
     environment:
-      - ConnectionStrings__OrderDb=Server=sqlserver;Database=OrderDb;Trusted_Connection=True;TrustServerCertificate=True
+      - ConnectionStrings__OrderDb=Server=sqlserver;Database=OrderDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
       - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
@@ -125,7 +125,7 @@ services:
     env_file:
       - Common.env
     environment:
-      - ConnectionStrings__PaymentDb=Server=sqlserver;Database=PaymentDb;Trusted_Connection=True;TrustServerCertificate=True
+      - ConnectionStrings__PaymentDb=Server=sqlserver;Database=PaymentDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
       - MessageQueueSettings__Host=rabbitmq
       - MessageQueueSettings__UserName=rabbitmqUser
       - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}

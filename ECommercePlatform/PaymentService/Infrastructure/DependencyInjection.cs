@@ -5,6 +5,8 @@ using MassTransit;
 
 using Microsoft.EntityFrameworkCore;
 
+using PaymentService.Application.Interfaces;
+using PaymentService.Infrastructure.Gateways;
 using PaymentService.Infrastructure.Messaging;
 using PaymentService.Infrastructure.Persistence;
 
@@ -49,6 +51,8 @@ namespace PaymentService.Infrastructure
             });
 
             services.AddTokenAuthentication(configuration);
+
+            services.AddTransient<IPaymentGateway, CardPaymentGateway>();
 
             return services;
         }

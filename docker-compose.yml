@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
 
   data:
@@ -144,3 +142,4 @@ networks:
 volumes:
   rabbitmq_data:
   data-protection:
+  sqldata:

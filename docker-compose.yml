@@ -6,7 +6,7 @@ services:
     ports: 
         - "1433:1433"
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
       - ACCEPT_EULA=Y
     volumes: 
@@ -15,13 +15,14 @@ services:
         - ecommerce_net
 
   rabbitmq:
+    container_name: rabbitmq
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
     hostname: rabbitmq
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmqUser
     volumes:
@@ -30,15 +31,16 @@ services:
       - ecommerce_net
 
   identity:
+    container_name: identity
     build:
       context: ./ECommercePlatform
       dockerfile: IdentityService/Dockerfile
     ports:
       - "5001:80"
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
-      - ConnectionStrings__IdentityDb=Server=sqlserver;Database=IdentityDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
+      - ConnectionStrings__IdentityDb=Server=sqlserver;Database=IdentityDb;User Id=sa;Password=yourStrongPassword12!@;TrustServerCertificate=True
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -48,18 +50,16 @@ services:
       - ecommerce_net
     
   catalog:
+    container_name: catalog
     build:
       context: ./ECommercePlatform
       dockerfile: CatalogService/Dockerfile
     ports:
       - "5002:80"
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
-      - ConnectionStrings__CatalogDb=Server=sqlserver;Database=CatalogDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
-      - MessageQueueSettings__Host=rabbitmq
-      - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
+      - ConnectionStrings__CatalogDb=Server=sqlserver;Database=CatalogDb;User Id=sa;Password=yourStrongPassword12!@;TrustServerCertificate=True
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -70,18 +70,16 @@ services:
       - ecommerce_net
 
   inventory:
+    container_name: inventory
     build:
       context: ./ECommercePlatform
       dockerfile: InventoryService/Dockerfile
     ports:
       - "5003:80"
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
-      - ConnectionStrings__InventoryDb=Server=sqlserver;Database=InventoryDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
-      - MessageQueueSettings__Host=rabbitmq
-      - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
+      - ConnectionStrings__InventoryDb=Server=sqlserver;Database=InventoryDb;User Id=sa;Password=yourStrongPassword12!@;TrustServerCertificate=True
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -92,19 +90,16 @@ services:
       - ecommerce_net
 
   order:
+    container_name: order
     build:
       context: ./ECommercePlatform
       dockerfile: OrderService/Dockerfile
     ports:
       - "5004:80"
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
-      - ConnectionStrings__OrderDb=Server=sqlserver;Database=OrderDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
-      - MessageQueueSettings__Host=rabbitmq
-      - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
-    
+      - ConnectionStrings__OrderDb=Server=sqlserver;Database=OrderDb;User Id=sa;Password=yourStrongPassword12!@;TrustServerCertificate=True
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys
@@ -115,18 +110,16 @@ services:
       - ecommerce_net
 
   payment:
+    container_name: payment
     build:
       context: ./ECommercePlatform
       dockerfile: PaymentService/Dockerfile
     ports:
       - "5005:80"
     env_file:
-      - Common.env
+      - ./Common.env
     environment:
-      - ConnectionStrings__PaymentDb=Server=sqlserver;Database=PaymentDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
-      - MessageQueueSettings__Host=rabbitmq
-      - MessageQueueSettings__UserName=rabbitmqUser
-      - MessageQueueSettings__Password=${RABBITMQ_DEFAULT_PASS}
+      - ConnectionStrings__PaymentDb=Server=sqlserver;Database=PaymentDb;User Id=sa;Password=yourStrongPassword12!@;TrustServerCertificate=True
     restart: on-failure
     volumes:
       - data-protection:/root/.aspnet/DataProtection-Keys

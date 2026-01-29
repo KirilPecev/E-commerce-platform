@@ -32,6 +32,8 @@ namespace IdentityService.Infrastructure
                     new Claim("id", user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName!),
                 }),
+                Audience = this.applicationSettings.Audience,
+                Issuer = this.applicationSettings.Issuer,
                 Expires = DateTime.UtcNow.AddHours(this.applicationSettings.TokenExpirationHours),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

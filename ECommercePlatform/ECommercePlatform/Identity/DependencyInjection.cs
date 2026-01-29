@@ -23,14 +23,17 @@ namespace ECommercePlatform.Identity
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://identity-api";
-                    options.Audience = "ecommerce-api";
+                    var appSettingsSection = configuration.GetSection(nameof(ApplicationSettings));
+                    options.Authority = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Authority));
+                    options.Audience = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Audience));
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
+                        ValidIssuer = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Issuer)),
                         ValidateAudience = true,
+                        ValidAudience = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Audience)),
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key)
                     };

@@ -1,0 +1,44 @@
+# IdentityService API quick requests
+# Default: IIS Express URL (use when running with IIS Express)
+@baseUrl = http://localhost:50977
+# Alternative: Project (dotnet run) profile
+@projectUrl = http://localhost:5118
+@contentType = application/json
+
+### Swagger (IIS Express)
+GET {{baseUrl}}/swagger/index.html
+Accept: text/html
+
+### Health (IIS Express)
+GET {{baseUrl}}/health
+Accept: application/json
+
+### Register user
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "alice@example.com",
+  "password": "P@ssw0rd1"
+}
+
+### Login user
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "alice@example.com",
+  "password": "P@ssw0rd1"
+}
+
+# Note: the login response shape in this repo is AuthResult -> { "userId": "...", "token": "..." }.
+# Copy the returned token value and set the {{token}} variable below before calling protected endpoints.
+
+### Example protected request (replace {{token}} with the JWT from login)
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+# If you prefer to target the Project profile (dotnet run), set base URL to {{projectUrl}}:
+# @baseUrl = {{projectUrl}}

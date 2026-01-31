@@ -1,11 +1,13 @@
 ﻿using CatalogService.Infrastructure.Messaging;
 using CatalogService.Infrastructure.Persistence;
+using CatalogService.Infrastructure.Persistence.Seeding;
 
 using ECommercePlatform.Application.Interfaces;
 using ECommercePlatform.Identity;
 
 using MassTransit;
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Infrastructure
@@ -51,6 +53,18 @@ namespace CatalogService.Infrastructure
             services.AddTokenAuthentication(configuration);
 
             return services;
+        }
+
+        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app)
+        {
+            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            CatalogDbContext dbContext = serviceProvider.GetRequiredService<CatalogDbContext>();
+
+            await CategoriesSeeder.SeedCategoriesAsync(dbContext);
+
+            return app;
         }
     }
 }

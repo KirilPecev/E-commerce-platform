@@ -1,4 +1,5 @@
 ﻿using IdentityService.Application.Identity.Commands;
+using IdentityService.Contracts.Requests;
 using IdentityService.Contracts.Responses;
 
 using MediatR;
@@ -13,7 +14,7 @@ namespace IdentityService.Controllers
     public class IdentityController
          (IMediator mediator) : ControllerBase
     {
-        [HttpPost("register")]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             AuthResult result = await mediator.Send(
@@ -26,7 +27,7 @@ namespace IdentityService.Controllers
             return Ok(response);
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             AuthResult result = await mediator.Send(
@@ -37,6 +38,29 @@ namespace IdentityService.Controllers
             UserResponse response = new UserResponse(result.UserId, result.Token);
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            await mediator.Send(
+                new ChangePasswordCommand(
+                    request.UserId,
+                    request.CurrentPassword,
+                    request.NewPassword));
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(ChangeRoleRequest request)
+        {
+            await mediator.Send(
+                new ChangeUserRoleCommand(
+                    request.UserId,
+                    request.NewRole));
+
+            return NoContent();
         }
     }
 }

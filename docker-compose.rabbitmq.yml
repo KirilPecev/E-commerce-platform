@@ -1,0 +1,17 @@
+services:
+
+  rabbitmq:
+    container_name: rabbitmq_local
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_local_data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq_local_data:

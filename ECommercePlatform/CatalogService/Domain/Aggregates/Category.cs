@@ -18,6 +18,32 @@ namespace CatalogService.Domain.Aggregates
 
         public Category(Guid id, string name, string? description)
         {
+            Validate(name, description);
+
+            Id = id;
+            Name = name;
+            Description = description;
+        }
+
+        public Category(string name, string? description)
+        {
+            Validate(name, description);
+
+            Id = Guid.NewGuid();
+            Name = name;
+            Description = description;
+        }
+
+        public void UpdateDetails(string name, string? description)
+        {
+            Validate(name, description);
+
+            Name = name;
+            Description = description;
+        }
+
+        private static void Validate(string name, string? description)
+        {
             if (string.IsNullOrWhiteSpace(name))
                 throw new CatalogDomainException("Category name is required.");
 
@@ -26,10 +52,6 @@ namespace CatalogService.Domain.Aggregates
 
             if (description != default && description.Length > 500)
                 throw new CatalogDomainException("Description cannot exceed 500 characters.");
-
-            Id = id;
-            Name = name;
-            Description = description;
         }
     }
 }

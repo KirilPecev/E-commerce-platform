@@ -2,6 +2,7 @@
 using ECommercePlatform.Identity;
 
 using InventoryService.Infrastructure.Messaging;
+using InventoryService.Infrastructure.Messaging.Consumers;
 using InventoryService.Infrastructure.Persistence;
 
 using MassTransit;
@@ -30,6 +31,8 @@ namespace InventoryService.Infrastructure
             // MassTransit + RabbitMQ
             services.AddMassTransit(x =>
             {
+                x.AddConsumers(typeof(ProductCreatedIntegrationEventConsumer).Assembly);
+
                 x.SetKebabCaseEndpointNameFormatter();
 
                 x.UsingRabbitMq((context, cfg) =>

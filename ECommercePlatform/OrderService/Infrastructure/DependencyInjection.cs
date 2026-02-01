@@ -6,7 +6,10 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 using OrderService.Infrastructure.Messaging;
+using OrderService.Infrastructure.Messaging.Consumers;
 using OrderService.Infrastructure.Persistence;
+
+using static MassTransit.Monitoring.Performance.BuiltInCounters;
 
 namespace OrderService.Infrastructure
 {
@@ -30,6 +33,8 @@ namespace OrderService.Infrastructure
             // MassTransit + RabbitMQ
             services.AddMassTransit(x =>
             {
+                x.AddConsumers(typeof(PaymentCompletedEventConsumer).Assembly);
+
                 x.SetKebabCaseEndpointNameFormatter();
 
                 x.UsingRabbitMq((context, cfg) =>

@@ -4,6 +4,6 @@ namespace IdentityService.Application.Identity.Commands
 {
     public record ChangeUserRoleCommand(
         Guid UserId,
-        string NewRole
+        string[] Roles
         ) : IRequest;
 }

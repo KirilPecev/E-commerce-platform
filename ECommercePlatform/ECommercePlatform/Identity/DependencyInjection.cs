@@ -20,14 +20,18 @@ namespace ECommercePlatform.Identity
             byte[] key = Encoding.ASCII.GetBytes(secret);
 
             services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     var appSettingsSection = configuration.GetSection(nameof(ApplicationSettings));
-                    options.Authority = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Authority));
-                    options.Audience = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Audience));
+                    
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
+
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -35,7 +39,8 @@ namespace ECommercePlatform.Identity
                         ValidateAudience = true,
                         ValidAudience = appSettingsSection.GetValue<string>(nameof(ApplicationSettings.Audience)),
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key)
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateLifetime = true
                     };
                 });
 

@@ -21,7 +21,7 @@ namespace IdentityService.Application.Identity.Commands
 
             await userManager.RemoveFromRolesAsync(user, await userManager.GetRolesAsync(user));
 
-            await userManager.AddToRoleAsync(user, request.NewRole);
+            await userManager.AddToRolesAsync(user, request.Roles);
         }
     }
 }

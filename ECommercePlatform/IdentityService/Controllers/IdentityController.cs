@@ -1,9 +1,15 @@
-﻿using IdentityService.Application.Identity.Commands;
+﻿using System.Security.Claims;
+
+using ECommercePlatform.Identity;
+
+using IdentityService.Application.Identity.Commands;
 using IdentityService.Contracts.Requests;
 using IdentityService.Contracts.Responses;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +20,7 @@ namespace IdentityService.Controllers
     public class IdentityController
          (IMediator mediator) : ControllerBase
     {
-        [HttpPost]
+        [HttpPost(nameof(Register))]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             AuthResult result = await mediator.Send(
@@ -27,7 +33,7 @@ namespace IdentityService.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost(nameof(Login))]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             AuthResult result = await mediator.Send(
@@ -40,25 +46,26 @@ namespace IdentityService.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpPut("me/password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
         {
+
             await mediator.Send(
                 new ChangePasswordCommand(
-                    request.UserId,
+                    Guid.Parse(User.FindFirstValue("id")!),
                     request.CurrentPassword,
                     request.NewPassword));
 
             return NoContent();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ChangeRole(ChangeRoleRequest request)
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPut("{userId:guid}/roles")]
+        public async Task<IActionResult> ChangeRoles(Guid userId, ChangeRoleRequest request)
         {
             await mediator.Send(
-                new ChangeUserRoleCommand(
-                    request.UserId,
-                    request.NewRole));
+                new ChangeUserRoleCommand(userId, request.Roles));
 
             return NoContent();
         }

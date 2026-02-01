@@ -1,4 +1,5 @@
 ﻿
+using CatalogService.Domain.Aggregates;
 using CatalogService.Infrastructure.Persistence;
 
 using MassTransit.DependencyInjection;
@@ -18,11 +19,14 @@ namespace CatalogService.Application.Products.Queries
             => await dbContext
                 .Products
                 .AsNoTracking()
+                .Where(p => p.Status == ProductStatus.Active)
                 .Select(product => new ProductDto(
                     product.Id,
                     product.Name.Value,
                     product.Price.Amount,
-                    product.Price.Currency
+                    product.Price.Currency,
+                    product.Category.Id,
+                    product.Description
                 ))
                 .ToListAsync(cancellationToken);
     }

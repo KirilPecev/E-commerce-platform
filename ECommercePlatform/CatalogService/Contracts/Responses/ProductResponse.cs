@@ -4,5 +4,7 @@
         Guid Id,
         string Name,
         decimal Amount,
-        string Currency);
+        string Currency,
+        Guid CategoryId,
+        string? Description);
 }

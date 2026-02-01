@@ -16,6 +16,7 @@ namespace CatalogService.Application.Products.Commands
         {
             ProductVariant? productVariant = await dbContext
                 .ProductVariants
+                .Include(v => v.Product)
                 .FirstOrDefaultAsync(p => p.Id == request.VariantId
                                        && p.Product.Id == request.ProductId, cancellationToken);
 

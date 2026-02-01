@@ -1,4 +1,5 @@
 ﻿
+using CatalogService.Domain.Aggregates;
 using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
@@ -14,8 +15,8 @@ namespace CatalogService.Application.Products.Queries
             => await dbContext
                 .Products
                 .AsNoTracking()
-                .Where(p => p.Id == request.Id)
-                .Select(p => new ProductDto(p.Id, p.Name.Value, p.Price.Amount, p.Price.Currency))
+                .Where(p => p.Id == request.Id && p.Status == ProductStatus.Active)
+                .Select(p => new ProductDto(p.Id, p.Name.Value, p.Price.Amount, p.Price.Currency, p.Category.Id, p.Description))
                 .FirstOrDefaultAsync(cancellationToken);
     }
 }

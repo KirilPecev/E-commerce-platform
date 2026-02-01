@@ -20,11 +20,13 @@ namespace CatalogService.Application.Products.Commands
             if (product is null)
                 throw new NotFoundException(nameof(Product), request.Id);
 
-            Guid variantId = product.AddProductVariant(request.Sku, request.Amount, request.Currency, request.StockQuantity, request.Size, request.Color);
+            ProductVariant variant = product.AddProductVariant(request.Sku, request.Amount, request.Currency, request.StockQuantity, request.Size, request.Color);
+
+            dbContext.ProductVariants.Add(variant);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            return variantId;
+            return variant.Id;
         }
     }
 }

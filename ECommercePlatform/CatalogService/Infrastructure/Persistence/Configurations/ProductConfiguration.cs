@@ -34,6 +34,11 @@ namespace CatalogService.Infrastructure.Persistence.Configurations
 
             builder.Property(p => p.CreatedAt)
                    .IsRequired();
+
+            builder.HasMany(p => p.Variants)
+                   .WithOne(v => v.Product  )
+                   .HasForeignKey("ProductId")
+                   .IsRequired();
         }
     }
 }

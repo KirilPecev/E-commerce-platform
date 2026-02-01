@@ -35,7 +35,7 @@ namespace CatalogService.Domain.Aggregates
             CreatedAt = DateTime.UtcNow;
         }
 
-        public Guid AddProductVariant(string sku, decimal amount, string currency, int stockQuantity, string? size, string? color)
+        public ProductVariant AddProductVariant(string sku, decimal amount, string currency, int stockQuantity, string? size, string? color)
         {
             if (Status == ProductStatus.Inactive)
                 throw new CatalogDomainException("Cannot add variant to inactive product");
@@ -46,7 +46,7 @@ namespace CatalogService.Domain.Aggregates
 
             AddDomainEvent(new ProductCreatedDomainEvent(Id, productVariant.Id, stockQuantity));
 
-            return productVariant.Id;
+            return productVariant;
         }
 
         public void ChangePrice(Money newPrice)

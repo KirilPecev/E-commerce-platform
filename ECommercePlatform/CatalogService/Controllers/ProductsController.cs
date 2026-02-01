@@ -48,7 +48,9 @@ namespace CatalogService.Controllers
                 result.Id,
                 result.Name,
                 result.Amount,
-                result.Currency
+                result.Currency,
+                result.CategoryId,
+                result.Description
             );
 
             return Ok(response);
@@ -64,7 +66,9 @@ namespace CatalogService.Controllers
                     result.Id,
                     result.Name,
                     result.Amount,
-                    result.Currency
+                    result.Currency,
+                    result.CategoryId,
+                    result.Description
                 ));
 
             return Ok(responses);

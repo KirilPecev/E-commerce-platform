@@ -12,7 +12,7 @@ namespace OrderService.Domain.Aggregates
         public DateTime CreatedAt { get; private set; }
         public OrderStatus Status { get; private set; }
         public decimal TotalPrice { get; private set; }
-        public Address ShippingAddress { get; private set; } = default!;
+        public Address? ShippingAddress { get; private set; } = default!;
         public string? CancellationReason { get; private set; }
         public DateTime? ShippedAt { get; private set; }
         public string? TrackingNumber { get; private set; }

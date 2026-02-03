@@ -4,6 +4,8 @@ using InventoryService.Infrastructure.Persistence;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace InventoryService.Application.Inventory.Commands
 {
     public class ReleaseStocksForOrderCommandHandler
@@ -13,6 +15,7 @@ namespace InventoryService.Application.Inventory.Commands
         {
             List<ProductStock> productStocks = inventoryDbContext
                  .ProductStocks
+                 .Include(ps => ps.Reservations)
                  .Where(ps => ps.HasReservedStockForOrder(request.OrderId))
                  .ToList();
 

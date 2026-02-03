@@ -26,10 +26,10 @@ namespace OrderService.Infrastructure.Persistence.Configurations
 
             builder.OwnsOne(o => o.ShippingAddress, address =>
             {
-                address.Property(a => a.Street).IsRequired();
-                address.Property(a => a.City).IsRequired();
-                address.Property(a => a.ZipCode).IsRequired();
-                address.Property(a => a.Country).IsRequired();
+                address.Property(a => a.Street);
+                address.Property(a => a.City);
+                address.Property(a => a.ZipCode);
+                address.Property(a => a.Country);
             });
 
             builder.Property(o => o.CancellationReason);

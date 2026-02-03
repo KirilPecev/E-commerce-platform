@@ -13,6 +13,7 @@ namespace OrderService.Application.Orders.Queries
         public async Task<List<OrderDto>> Handle(GetOrdersByCustomerQuery request, CancellationToken cancellationToken)
             => await ordersDbContext
                 .Orders
+                .AsNoTracking()
                 .Where(order => order.CustomerId == request.CustomerId)
                 .Select(o => new OrderDto(
                     o.Id,

@@ -15,6 +15,7 @@ namespace OrderService.Application.Orders.Commands
         {
             Order? order = await ordersDbContext
                 .Orders
+                .Include(o => o.Items)
                 .FirstOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken);
 
             if (order == null)

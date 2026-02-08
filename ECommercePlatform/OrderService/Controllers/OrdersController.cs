@@ -136,10 +136,10 @@ namespace OrderService.Controllers
         }
 
         [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]
-        [HttpPost("{orderId:guid}/pay")]
-        public async Task<IActionResult> Pay(Guid orderId)
+        [HttpPost("{orderId:guid}/finalize")]
+        public async Task<IActionResult> Finalize(Guid orderId)
         {
-            PayOrderCommand command = new PayOrderCommand(orderId);
+            FinalizeOrderCommand command = new FinalizeOrderCommand(orderId);
 
             await mediator.Send(command);
 

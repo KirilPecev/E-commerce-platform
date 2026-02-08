@@ -9,12 +9,12 @@ using MediatR;
 
 namespace InventoryService.Infrastructure.Messaging.Consumers
 {
-    public class OrderPaidIntegrationEventConsumer
-        (IMediator mediator) : IConsumer<OrderPaidIntegrationEvent>
+    public class OrderFinalizedIntegrationEventConsumer
+        (IMediator mediator) : IConsumer<OrderFinalizedIntegrationEvent>
     {
-        public async Task Consume(ConsumeContext<OrderPaidIntegrationEvent> context)
+        public async Task Consume(ConsumeContext<OrderFinalizedIntegrationEvent> context)
         {
-            OrderPaidIntegrationEvent message = context.Message;
+            OrderFinalizedIntegrationEvent message = context.Message;
 
             await mediator.Send(new ConfirmStockCommand(message.OrderId));
         }

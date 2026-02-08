@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PaymentService.Application.Interfaces;
 using PaymentService.Infrastructure.Gateways;
 using PaymentService.Infrastructure.Messaging;
+using PaymentService.Infrastructure.Messaging.Consumers;
 using PaymentService.Infrastructure.Persistence;
 
 namespace PaymentService.Infrastructure
@@ -32,6 +33,8 @@ namespace PaymentService.Infrastructure
             // MassTransit + RabbitMQ
             services.AddMassTransit(x =>
             {
+                x.AddConsumers(typeof(OrderFinalizedIntegrationEventConsumer).Assembly);
+
                 x.SetKebabCaseEndpointNameFormatter();
 
                 x.UsingRabbitMq((context, cfg) =>

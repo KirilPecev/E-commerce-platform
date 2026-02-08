@@ -13,16 +13,14 @@ namespace InventoryService.Application.Inventory.Commands
     {
         public async Task Handle(ConfirmStockCommand request, CancellationToken cancellationToken)
         {
-            List<ProductStock> productStocks = await inventoryDbContext
-                 .ProductStocks
-                 .Include(ps => ps.Reservations)
-                 .AsAsyncEnumerable()
-                 .Where(ps => ps.HasReservedPendingStockForOrder(request.OrderId))
-                 .ToListAsync();
+            List<StockReservation> stockReservations = await inventoryDbContext
+                 .StockReservations
+                 .Where(sr => sr.OrderId == request.OrderId && sr.Status == ReservationStatus.Pending)
+                 .ToListAsync(cancellationToken);
 
-            foreach (ProductStock productStock in productStocks)
+            foreach (StockReservation stockReservation in stockReservations)
             {
-                productStock.Confirm(request.OrderId);
+                stockReservation.Confirm();
             }
 
             await inventoryDbContext.SaveChangesAsync(cancellationToken);

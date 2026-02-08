@@ -53,17 +53,22 @@ namespace OrderService.Domain.Aggregates
             this.AddDomainEvent(new OrderCreatedDomainEvent(Id, productId, productVariantId, quantity));
         }
 
-        public void MarkAsPaid()
+        public void FinalizeOrder()
         {
             if (Status != OrderStatus.Draft)
-                throw new OrderDomainException("Order cannot be paid.");
+                throw new OrderDomainException("Order cannot be finalized.");
 
             if (!Items.Any())
-                throw new OrderDomainException("Cannot pay an empty order.");
+                throw new OrderDomainException("Cannot finalize an empty order.");
 
-            Status = OrderStatus.Paid;
+            if (ShippingAddress == null)
+                throw new OrderDomainException("Cannot finalize an order without adress.");
 
-            AddDomainEvent(new OrderPaidDomainEvent(Id));
+            Status = OrderStatus.Finalized;
+
+            string currency = Items.First().UnitPrice.Currency;
+
+            AddDomainEvent(new OrderFinalizedDomainEvent(Id, TotalPrice, currency));
         }
 
         public void SetShippingAddress(Address address)
@@ -89,6 +94,14 @@ namespace OrderService.Domain.Aggregates
             Status = OrderStatus.Cancelled;
 
             AddDomainEvent(new OrderCancelledDomainEvent(Id, reason));
+        }
+
+        public void MarkAsPaid()
+        {
+            if (Status != OrderStatus.Finalized)
+                throw new OrderDomainException("Only finalized orders can be paid.");
+
+            Status = OrderStatus.Paid;
         }
 
         public void MarkAsShipped(string trackingNumber)

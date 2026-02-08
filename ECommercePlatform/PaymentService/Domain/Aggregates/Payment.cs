@@ -36,8 +36,7 @@ namespace PaymentService.Domain.Aggregates
             Status = PaymentStatus.Paid;
             ProcessedAt = DateTime.UtcNow;
 
-            AddDomainEvent(
-                new PaymentCompletedDomainEvent(Id, OrderId));
+            AddDomainEvent(new PaymentCompletedDomainEvent(Id, OrderId));
         }
 
         public void MarkAsFailed(string? failureReason)

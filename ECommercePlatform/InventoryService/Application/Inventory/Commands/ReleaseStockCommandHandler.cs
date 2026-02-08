@@ -14,6 +14,7 @@ namespace InventoryService.Application.Inventory.Commands
         {
             ProductStock? productStock = await inventoryDbContext
                 .ProductStocks
+                .Include(ps => ps.Reservations)
                 .FirstOrDefaultAsync(ps => ps.ProductId == request.ProductId
                                         && ps.ProductVariantId == request.ProductVariantId, cancellationToken);
 

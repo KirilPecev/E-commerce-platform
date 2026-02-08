@@ -13,10 +13,12 @@ namespace InventoryService.Application.Inventory.Commands
     {
         public async Task Handle(ConfirmStockCommand request, CancellationToken cancellationToken)
         {
-            List<ProductStock> productStocks = inventoryDbContext
+            List<ProductStock> productStocks = await inventoryDbContext
                  .ProductStocks
+                 .Include(ps => ps.Reservations)
+                 .AsAsyncEnumerable()
                  .Where(ps => ps.HasReservedPendingStockForOrder(request.OrderId))
-                 .ToList();
+                 .ToListAsync();
 
             foreach (ProductStock productStock in productStocks)
             {

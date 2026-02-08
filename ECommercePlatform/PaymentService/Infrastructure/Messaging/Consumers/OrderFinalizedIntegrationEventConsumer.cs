@@ -1,6 +1,5 @@
 ﻿
 using ECommercePlatform.Events.OrderIntegrationEvents;
-using ECommercePlatform.Events.PaymentIntegrationEvents;
 
 using MassTransit;
 

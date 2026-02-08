@@ -35,7 +35,8 @@ namespace PaymentService.Infrastructure
             {
                 x.AddConsumers(typeof(OrderFinalizedIntegrationEventConsumer).Assembly);
 
-                x.SetKebabCaseEndpointNameFormatter();
+                x.SetEndpointNameFormatter(
+                    new KebabCaseEndpointNameFormatter("payment", false));
 
                 x.UsingRabbitMq((context, cfg) =>
                 {

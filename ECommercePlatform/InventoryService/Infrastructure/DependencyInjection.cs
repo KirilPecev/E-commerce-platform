@@ -33,7 +33,8 @@ namespace InventoryService.Infrastructure
             {
                 x.AddConsumers(typeof(ProductCreatedIntegrationEventConsumer).Assembly);
 
-                x.SetKebabCaseEndpointNameFormatter();
+                x.SetEndpointNameFormatter(
+                    new KebabCaseEndpointNameFormatter("inventory", false));
 
                 x.UsingRabbitMq((context, cfg) =>
                 {

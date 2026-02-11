@@ -21,12 +21,17 @@ namespace OrderService.Application.Orders.Commands
 
             if (order == null) throw new KeyNotFoundException($"Order with ID {request.OrderId} not found.");
 
-            order.AddItem(
+            (OrderItem item, bool isCreated) = order.AddItem(
                 request.ProductId,
                 request.ProductVariantId,
                 request.ProductName,
                 new Money(request.Price, request.Currency),
                 request.Quantity);
+
+            if (isCreated)
+            {
+                ordersDbContext.Items.Add(item);
+            }
 
             await ordersDbContext.SaveChangesAsync(cancellationToken);
         }

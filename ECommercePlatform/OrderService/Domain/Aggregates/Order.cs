@@ -33,24 +33,30 @@ namespace OrderService.Domain.Aggregates
             Status = OrderStatus.Draft;
         }
 
-        public void AddItem(Guid productId, Guid productVariantId, string name, Money price, int quantity)
+        public (OrderItem, bool) AddItem(Guid productId, Guid productVariantId, string name, Money price, int quantity)
         {
+            bool isCreated = false;
+
             if (Status != OrderStatus.Draft)
                 throw new OrderDomainException("Cannot modify a finalized order.");
 
-            OrderItem? existingOrderItem = Items.FirstOrDefault(i => i.ProductVariantId == productVariantId);
-            if (existingOrderItem != default)
+            OrderItem? item = Items.FirstOrDefault(i => i.ProductVariantId == productVariantId);
+            if (item != default)
             {
-                existingOrderItem.IncreaseQuantity(quantity);
+                item.IncreaseQuantity(quantity);
             }
             else
             {
-                Items.Add(new OrderItem(productId, productVariantId, name, price, quantity));
+                item = new OrderItem(productId, productVariantId, name, price, quantity);
+                Items.Add(item);
+                isCreated = true;
             }
 
             RecalculateTotal();
 
             this.AddDomainEvent(new OrderCreatedDomainEvent(Id, productId, productVariantId, quantity));
+
+            return (item, isCreated);
         }
 
         public void FinalizeOrder()

@@ -29,6 +29,20 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - ecommerce_net
+  
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./Common.env
+    environment:
+      REDIS_INSTANCENAME: "CatalogService:"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ecommerce_net
 
   identity:
     container_name: identity
@@ -66,6 +80,7 @@ services:
     depends_on:
       - data
       - rabbitmq
+      - redis
     networks:
       - ecommerce_net
 
@@ -136,3 +151,4 @@ volumes:
   rabbitmq_data:
   data-protection:
   sqldata:
+  redis_data:

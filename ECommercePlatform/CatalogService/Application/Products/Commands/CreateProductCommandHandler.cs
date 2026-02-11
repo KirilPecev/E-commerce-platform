@@ -1,4 +1,5 @@
 ﻿
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Domain.ValueObjects;
 using CatalogService.Infrastructure.Persistence;
@@ -10,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Commands
 {
     public class CreateProductCommandHandler
-        (CatalogDbContext dbContext) : IRequestHandler<CreateProductCommand, Guid>
+        (CatalogDbContext dbContext,
+        IProductCache cache) : IRequestHandler<CreateProductCommand, Guid>
     {
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
@@ -28,6 +30,8 @@ namespace CatalogService.Application.Products.Commands
             dbContext.Products.Add(product);
 
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            await cache.RemoveAllAsync();
 
             return product.Id;
         }

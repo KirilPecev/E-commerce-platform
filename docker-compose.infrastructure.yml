@@ -12,6 +12,17 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_local_data:/var/lib/rabbitmq
+  
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./Common.env
+    volumes:
+      - redis_data:/data
 
 volumes:
   rabbitmq_local_data:
+  redis_data:

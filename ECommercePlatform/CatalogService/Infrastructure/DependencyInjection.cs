@@ -1,4 +1,6 @@
-﻿using CatalogService.Infrastructure.Messaging;
+﻿using CatalogService.Application.Interfaces;
+using CatalogService.Infrastructure.Caching;
+using CatalogService.Infrastructure.Messaging;
 using CatalogService.Infrastructure.Persistence;
 using CatalogService.Infrastructure.Persistence.Seeding;
 
@@ -7,7 +9,6 @@ using ECommercePlatform.Identity;
 
 using MassTransit;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Infrastructure
@@ -51,6 +52,23 @@ namespace CatalogService.Infrastructure
             });
 
             services.AddTokenAuthentication(configuration);
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                string? host = configuration["Redis:Host"];
+                string? port = configuration["Redis:Port"];
+                string? instanceName = configuration["Redis:InstanceName"];
+
+                if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(port))
+                {
+                    throw new InvalidOperationException("Redis connection string is missing in configuration.");
+                }
+
+                options.Configuration = $"{host}:{port}";
+                options.InstanceName = instanceName;
+            });
+
+            services.AddScoped<IProductCache, RedisProductCache>();
 
             return services;
         }

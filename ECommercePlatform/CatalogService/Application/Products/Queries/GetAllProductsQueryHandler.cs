@@ -1,22 +1,25 @@
 ﻿
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Infrastructure.Persistence;
 
-using MassTransit.DependencyInjection;
-using MassTransit.Internals.GraphValidation;
-
 using MediatR;
 
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Application.Products.Queries
 {
     public class GetAllProductsQueryHandler
-        (CatalogDbContext dbContext) : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
+        (CatalogDbContext dbContext,
+        IProductCache cache) : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
     {
         public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
-            => await dbContext
+        {
+            IReadOnlyList<ProductDto>? cached = await cache.GetAllAsync();
+
+            if (cached != null) return cached;
+
+            List<ProductDto> products = await dbContext
                 .Products
                 .AsNoTracking()
                 .Where(p => p.Status == ProductStatus.Active)
@@ -29,5 +32,10 @@ namespace CatalogService.Application.Products.Queries
                     product.Description
                 ))
                 .ToListAsync(cancellationToken);
+
+            await cache.SetAllAsync(products);
+
+            return products;
+        }
     }
 }

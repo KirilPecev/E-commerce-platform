@@ -1,4 +1,5 @@
 ﻿using CatalogService.Application.Exceptions;
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Infrastructure.Persistence;
 
@@ -9,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Commands
 {
     public class DeactivateProductCommandHandler
-        (CatalogDbContext dbContext) : IRequestHandler<DeactivateProductCommand>
+        (CatalogDbContext dbContext,
+        IProductCache cache) : IRequestHandler<DeactivateProductCommand>
     {
         public async Task Handle(DeactivateProductCommand request, CancellationToken cancellationToken)
         {
@@ -23,6 +25,9 @@ namespace CatalogService.Application.Products.Commands
             product.Deactivate();
 
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            await cache.RemoveByIdAsync(product.Id);
+            await cache.RemoveAllAsync();
         }
     }
 }

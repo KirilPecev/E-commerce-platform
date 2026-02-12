@@ -1,4 +1,5 @@
 ﻿using CatalogService.Domain.Events;
+using CatalogService.Domain.Exceptions;
 using CatalogService.Domain.ValueObjects;
 
 using ECommercePlatform.Domain.Abstractions;
@@ -24,6 +25,9 @@ namespace CatalogService.Domain.Aggregates
 
         public ProductVariant(Product product, string sku, Money price, string? size, string? color, int stockQuantity)
         {
+            if (stockQuantity < 0)
+                throw new CatalogDomainException("Stock quantity cannot be negative");
+
             Id = Guid.NewGuid();
             Product = product;
             Sku = sku;
@@ -36,7 +40,7 @@ namespace CatalogService.Domain.Aggregates
         public void UpdateDetails(string sku, string? size, string? color, int stockQuantity)
         {
             if (stockQuantity < 0)
-                throw new ArgumentException("Stock quantity cannot be negative", nameof(stockQuantity));
+                throw new CatalogDomainException("Stock quantity cannot be negative");
 
             Sku = sku;
             Size = size;

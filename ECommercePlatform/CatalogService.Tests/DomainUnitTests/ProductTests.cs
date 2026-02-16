@@ -5,7 +5,7 @@ using CatalogService.Domain.ValueObjects;
 
 using FluentAssertions;
 
-namespace CatalogService.Tests
+namespace CatalogService.Tests.DomainUnitTests
 {
     public class ProductTests
     {

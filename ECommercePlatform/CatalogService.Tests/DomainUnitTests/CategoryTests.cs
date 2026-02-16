@@ -1,10 +1,9 @@
 ﻿using CatalogService.Domain.Aggregates;
 using CatalogService.Domain.Exceptions;
-using CatalogService.Domain.ValueObjects;
 
 using FluentAssertions;
 
-namespace CatalogService.Tests
+namespace CatalogService.Tests.DomainUnitTests
 {
     public class CategoryTests
     {
@@ -120,8 +119,8 @@ namespace CatalogService.Tests
         {
             // Act
             Category category = new Category(Guid.Parse("11111111-0000-0000-0000-000000000001"), "Electronics", "All kinds of electronic devices");
-                        
-            Action act = () =>  category.UpdateDetails("", "All kinds of home appliances");
+
+            Action act = () => category.UpdateDetails("", "All kinds of home appliances");
 
             // Assert
             act.Should().Throw<CatalogDomainException>();

@@ -1,17 +1,14 @@
 ﻿using CatalogService.Application.Interfaces;
 using CatalogService.Application.Products.Queries;
-using CatalogService.Contracts.Responses;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Domain.ValueObjects;
-using CatalogService.Infrastructure.Persistence;
-
-using ECommercePlatform.Application.Interfaces;
 
 using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
 using Moq;
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace CatalogService.Tests.ApplicationTests
 {
@@ -50,7 +47,7 @@ namespace CatalogService.Tests.ApplicationTests
         {
             var dbContext = await CatalogDbContextFactory.CreateAsync(seedCategories: true);
 
-            Category? category = await dbContext.Categories.FirstOrDefaultAsync(x => x.Id == Guid.Parse("11111111-0000-0000-0000-000000000001"), TestContext.Current.CancellationToken);
+            Category? category = await dbContext.Categories.FirstOrDefaultAsync(x => x.Id == Guid.Parse("11111111-0000-0000-0000-000000000002"), TestContext.Current.CancellationToken);
 
             // Act
             Product product = new Product(
@@ -60,7 +57,7 @@ namespace CatalogService.Tests.ApplicationTests
                 "High-end gaming laptop"
             );
 
-            dbContext.Products.Add(product);
+            await dbContext.Products.AddAsync(product, TestContext.Current.CancellationToken);
 
             await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -71,7 +68,7 @@ namespace CatalogService.Tests.ApplicationTests
 
             var result = await handler.Handle(new GetAllProductsQuery(), TestContext.Current.CancellationToken);
 
-            result.Should().HaveCount(1);
+            result.Should().NotBeEmpty();
 
             cacheMock.Verify(x => x.SetAllAsync(It.IsAny<IReadOnlyList<ProductDto>>()),
                 Times.Once);

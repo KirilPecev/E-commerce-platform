@@ -6,6 +6,7 @@ using ECommercePlatform.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 using Moq;
+using Xunit;
 
 namespace CatalogService.Tests
 {
@@ -20,6 +21,9 @@ namespace CatalogService.Tests
                 .Options;
 
             var context = new CatalogDbContext(options, dispatcherMock.Object);
+
+            // Ensure DB created (no-op for InMemory but explicit is clearer)
+            await context.Database.EnsureCreatedAsync();
 
             if (seedCategories)
                 await CategoriesSeeder.SeedCategoriesAsync(context);

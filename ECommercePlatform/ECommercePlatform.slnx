@@ -3,6 +3,7 @@
   <Project Path="CatalogService/CatalogService.csproj" />
   <Project Path="ECommercePlatform/ECommercePlatform.csproj" />
   <Project Path="IdentityService/IdentityService.csproj" />
+  <Project Path="InventoryService.Tests/InventoryService.Tests.csproj" />
   <Project Path="InventoryService/InventoryService.csproj" />
   <Project Path="OrderService/OrderService.csproj" />
   <Project Path="PaymentService/PaymentService.csproj" />

@@ -7,5 +7,6 @@
   <Project Path="InventoryService/InventoryService.csproj" />
   <Project Path="OrderService.Tests/OrderService.Tests.csproj" />
   <Project Path="OrderService/OrderService.csproj" />
+  <Project Path="PaymentService.Tests/PaymentService.Tests.csproj" />
   <Project Path="PaymentService/PaymentService.csproj" />
 </Solution>

@@ -17,6 +17,7 @@
             Secret = default!;
             Audience = default!;
             Authority = default!;
+            Issuer = default!;
         }
     }
 }

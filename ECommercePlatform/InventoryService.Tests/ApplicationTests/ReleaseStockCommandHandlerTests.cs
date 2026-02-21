@@ -24,7 +24,7 @@ namespace InventoryService.Tests.ApplicationTests
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            var dispatcherMock = new Mock<IDomainEventDispatcher>(TestContext.Current.CancellationToken);
+            var dispatcherMock = new Mock<IDomainEventDispatcher>();
 
             await using var context = new InventoryDbContext(options, dispatcherMock.Object);
 
@@ -42,7 +42,7 @@ namespace InventoryService.Tests.ApplicationTests
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            var dispatcherMock = new Mock<IDomainEventDispatcher>(TestContext.Current.CancellationToken);
+            var dispatcherMock = new Mock<IDomainEventDispatcher>();
 
             await using (var context = new InventoryDbContext(options, dispatcherMock.Object))
             {
@@ -71,7 +71,7 @@ namespace InventoryService.Tests.ApplicationTests
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            var dispatcherMock = new Mock<IDomainEventDispatcher>(TestContext.Current.CancellationToken);
+            var dispatcherMock = new Mock<IDomainEventDispatcher>();
 
             await using (var context = new InventoryDbContext(options, dispatcherMock.Object))
             {

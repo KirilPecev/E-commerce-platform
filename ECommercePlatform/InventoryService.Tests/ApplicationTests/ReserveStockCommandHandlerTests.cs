@@ -50,12 +50,12 @@ namespace InventoryService.Tests.ApplicationTests
             var variantId = Guid.NewGuid();
             var stock = new ProductStock(productId, variantId, 5);
 
-            context.ProductStocks.Add(stock);
+            await context.ProductStocks.AddAsync(stock, TestContext.Current.CancellationToken);
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             var handler = new ReserveStockCommandHandler(context);
 
-            Func<Task> act = () => handler.Handle(new ReserveStockCommand(productId, variantId, Guid.NewGuid(), 0), CancellationToken.None);
+            Func<Task> act = () => handler.Handle(new ReserveStockCommand(Guid.NewGuid(), productId, variantId, 0), TestContext.Current.CancellationToken);
 
             await act.Should().ThrowAsync<InventoryDomainException>().WithMessage("Quantity must be positive.");
         }
@@ -77,7 +77,7 @@ namespace InventoryService.Tests.ApplicationTests
 
                 var stock = new ProductStock(productId, variantId, 2);
 
-                context.ProductStocks.Add(stock);
+                await context.ProductStocks.AddAsync(stock, TestContext.Current.CancellationToken);
                 await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
                 // reset mock to ignore any events from initial save
@@ -85,7 +85,7 @@ namespace InventoryService.Tests.ApplicationTests
 
                 var handler = new ReserveStockCommandHandler(context);
 
-                await handler.Handle(new ReserveStockCommand(productId, variantId, orderId, 5), CancellationToken.None);
+                await handler.Handle(new ReserveStockCommand(orderId, productId, variantId, 5), TestContext.Current.CancellationToken);
 
                 var saved = await context.ProductStocks.Include(ps => ps.Reservations).FirstAsync(ps => ps.ProductId == productId && ps.ProductVariantId == variantId, TestContext.Current.CancellationToken);
 
@@ -113,14 +113,14 @@ namespace InventoryService.Tests.ApplicationTests
 
                 var stock = new ProductStock(productId, variantId, 10);
 
-                context.ProductStocks.Add(stock);
+                await context.ProductStocks.AddAsync(stock, TestContext.Current.CancellationToken);
                 await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
                 dispatcherMock.Reset();
 
                 var handler = new ReserveStockCommandHandler(context);
 
-                await handler.Handle(new ReserveStockCommand(productId, variantId, orderId, 4), CancellationToken.None);
+                await handler.Handle(new ReserveStockCommand(orderId, productId, variantId, 4), TestContext.Current.CancellationToken);
 
                 var saved = await context.ProductStocks.Include(ps => ps.Reservations).FirstAsync(ps => ps.ProductId == productId && ps.ProductVariantId == variantId, TestContext.Current.CancellationToken);
 

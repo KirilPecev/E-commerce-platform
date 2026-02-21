@@ -11,13 +11,24 @@ namespace CatalogService.Application.Products.Commands
     {
         public async Task Handle(DeleteProductVariantCommand request, CancellationToken cancellationToken)
         {
-            await dbContext
-                .ProductVariants
-                .Where(p => p.Id == request.VariantId
-                         && p.Product.Id == request.ProductId)
-                .ExecuteDeleteAsync(cancellationToken);
+            if (dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                var variants = await dbContext.ProductVariants
+                    .Where(p => p.Id == request.VariantId &&
+                                p.Product.Id == request.ProductId)
+                    .ToListAsync(cancellationToken);
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+                dbContext.ProductVariants.RemoveRange(variants);
+
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                return;
+            }
+
+            await dbContext.ProductVariants
+                .Where(p => p.Id == request.VariantId &&
+                            p.Product.Id == request.ProductId)
+                .ExecuteDeleteAsync(cancellationToken);
         }
     }
 }

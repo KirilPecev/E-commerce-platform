@@ -1,12 +1,14 @@
 <Solution>
-  <Project Path="CatalogService.Tests/CatalogService.Tests.csproj" Id="6b7898ad-0c65-4cb1-9b92-6ed43349e55f" />
+  <Folder Name="/Tests/">
+    <Project Path="../ECommercePlatform.Tests/CatalogService.Tests/CatalogService.Tests.csproj" />
+    <Project Path="../ECommercePlatform.Tests/InventoryService.Tests/InventoryService.Tests.csproj" />
+    <Project Path="../ECommercePlatform.Tests/OrderService.Tests/OrderService.Tests.csproj" />
+    <Project Path="../ECommercePlatform.Tests/PaymentService.Tests/PaymentService.Tests.csproj" />
+  </Folder>
   <Project Path="CatalogService/CatalogService.csproj" />
   <Project Path="ECommercePlatform/ECommercePlatform.csproj" />
   <Project Path="IdentityService/IdentityService.csproj" />
-  <Project Path="InventoryService.Tests/InventoryService.Tests.csproj" />
   <Project Path="InventoryService/InventoryService.csproj" />
-  <Project Path="OrderService.Tests/OrderService.Tests.csproj" />
   <Project Path="OrderService/OrderService.csproj" />
-  <Project Path="PaymentService.Tests/PaymentService.Tests.csproj" />
   <Project Path="PaymentService/PaymentService.csproj" />
 </Solution>

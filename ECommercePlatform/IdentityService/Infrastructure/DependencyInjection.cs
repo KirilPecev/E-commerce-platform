@@ -10,14 +10,17 @@ namespace IdentityService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // DbContext
-            services
-                .AddDbContext<IdentityDbContext>(options =>
-                    options.UseSqlServer(
-                        configuration.GetConnectionString("IdentityDb"),
-                        sqlOptions => sqlOptions.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)));
+            if (!environment.IsEnvironment("Testing"))
+            {
+                // DbContext
+                services
+                    .AddDbContext<IdentityDbContext>(options =>
+                        options.UseSqlServer(
+                            configuration.GetConnectionString("IdentityDb"),
+                            sqlOptions => sqlOptions.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName)));
+            }
 
             services
                 .AddIdentity<User, Role>(options =>

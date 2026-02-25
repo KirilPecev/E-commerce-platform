@@ -1,4 +1,5 @@
 ﻿
+using IdentityService.Application.Exceptions;
 using IdentityService.Infrastructure;
 
 using MediatR;
@@ -16,7 +17,7 @@ namespace IdentityService.Application.Identity.Commands
 
             if (user == null)
             {
-                throw new InvalidOperationException("User not found.");
+                throw new IdentityException("User not found.");
             }
 
             IdentityResult result = await userManager.ChangePasswordAsync(
@@ -26,7 +27,7 @@ namespace IdentityService.Application.Identity.Commands
 
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException("Password change failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new IdentityException("Password change failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
     }

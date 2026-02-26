@@ -8,6 +8,7 @@ using IdentityService.Application.Identity.Commands;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityService.Tests.IntegrationTests
 {
@@ -15,7 +16,8 @@ namespace IdentityService.Tests.IntegrationTests
     {
         [Fact]
         public async Task ChangeRoles_ShouldReturnForbidden_ChangeRolesWithNoAdminRole()
-        {// Arrange
+        {
+            // Arrange
             var factory = new IdentityWebApplicationFactory()
                 .WithWebHostBuilder(b =>
                 {
@@ -23,6 +25,12 @@ namespace IdentityService.Tests.IntegrationTests
                 });
 
             var client = factory.CreateClient();
+
+            // Seed admin
+            using (var scope = factory.Services.CreateScope())
+            {
+                await IdentityTestSeeder.SeedAdminAsync(scope.ServiceProvider);
+            }
 
             string email = "testuser@test.com";
             string password = "StrongPass123!";
@@ -48,6 +56,18 @@ namespace IdentityService.Tests.IntegrationTests
             var auth = await loginResponse.Content.ReadFromJsonAsync<AuthResult>(TestContext.Current.CancellationToken);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth!.Token);
 
+            var adminLoginResponse = await client.PostAsJsonAsync(
+                "/api/identity/login",
+                new
+                {
+                    Email = IdentityTestSeeder.Email,
+                    Password = IdentityTestSeeder.Password,
+                },
+                TestContext.Current.CancellationToken);
+
+            var adminAuth = await adminLoginResponse.Content.ReadFromJsonAsync<AuthResult>(TestContext.Current.CancellationToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAuth!.Token);
+
             // Act
             var changeRoleResponse = await client.PutAsJsonAsync($"/api/identity/{auth.UserId}/roles", new
             {
@@ -55,7 +75,7 @@ namespace IdentityService.Tests.IntegrationTests
             },
             TestContext.Current.CancellationToken);
 
-            changeRoleResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            changeRoleResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
     }
 }

@@ -15,14 +15,17 @@ namespace PaymentService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // DbContext
-            services
+            if (!environment.IsEnvironment("Testing"))
+            {
+                // DbContext
+                services
                 .AddDbContext<PaymentDbContext>(options =>
                     options.UseSqlServer(
                         configuration.GetConnectionString("PaymentDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(PaymentDbContext).Assembly.FullName)));
+            }
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

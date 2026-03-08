@@ -39,7 +39,7 @@ namespace OrderService.Tests.ApplicationTests
 
             orderId.Should().NotBe(Guid.Empty);
 
-            var saved = await context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == orderId);
+            var saved = await context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == orderId, TestContext.Current.CancellationToken);
             saved.Should().NotBeNull();
             saved!.CustomerId.Should().Be(customerId);
             saved.Items.Should().HaveCount(1);

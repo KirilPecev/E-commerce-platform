@@ -19,6 +19,11 @@ namespace IdentityService.Application.Identity.Commands
                 throw new InvalidOperationException("User not found.");
             }
 
+            if (request.Roles.Count() == 0)
+            {
+                throw new InvalidOperationException("Please provide roles.");
+            }
+
             await userManager.RemoveFromRolesAsync(user, await userManager.GetRolesAsync(user));
 
             await userManager.AddToRolesAsync(user, request.Roles);

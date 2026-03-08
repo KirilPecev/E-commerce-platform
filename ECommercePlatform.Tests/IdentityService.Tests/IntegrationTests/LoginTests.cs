@@ -80,5 +80,43 @@ namespace IdentityService.Tests.IntegrationTests
             // Assert
             await act.Should().ThrowAsync<UnauthorizedAccessException>();
         }
+
+        [Fact]
+        public async Task Login_ShouldThrow_WhenPasswordIsWrong()
+        {
+            // Arrange
+            var factory = new IdentityWebApplicationFactory()
+                .WithWebHostBuilder(b =>
+                {
+                    b.UseEnvironment("Testing");
+                });
+
+            var client = factory.CreateClient();
+
+            var email = "wrongpass@test.com";
+            var password = "Password123!";
+
+            var registerResponse = await client.PostAsJsonAsync(
+                "/api/identity/register",
+                new
+                {
+                    Email = email,
+                    Password = password
+                },
+                TestContext.Current.CancellationToken);
+
+            registerResponse.EnsureSuccessStatusCode();
+
+            // Act
+            Func<Task> act = async () => await client.PostAsJsonAsync("/api/identity/login", new
+            {
+                Email = email,
+                Password = "WrongPassword123!"
+            },
+            TestContext.Current.CancellationToken);
+
+            // Assert
+            await act.Should().ThrowAsync<UnauthorizedAccessException>();
+        }
     }
 }

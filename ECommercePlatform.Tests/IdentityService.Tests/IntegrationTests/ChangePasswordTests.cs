@@ -72,6 +72,17 @@ namespace IdentityService.Tests.IntegrationTests
                 TestContext.Current.CancellationToken);
 
             loginResponseAfterChange.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            Func<Task> loginWithOldPassword = async () => await client.PostAsJsonAsync(
+                "/api/identity/login",
+                new
+                {
+                    Email = email,
+                    Password = password
+                },
+                TestContext.Current.CancellationToken);
+
+            await loginWithOldPassword.Should().ThrowAsync<UnauthorizedAccessException>();
         }
 
         [Fact]
@@ -152,6 +163,55 @@ namespace IdentityService.Tests.IntegrationTests
             Func<Task> act = async () => await client.PutAsJsonAsync("/api/identity/me/password", new
             {
                 CurrentPassword = password,
+                NewPassword = newPassword
+            },
+            TestContext.Current.CancellationToken);
+
+            // Assert
+            await act.Should().ThrowAsync<IdentityException>();
+        }
+
+        [Fact]
+        public async Task ChangePassword_ShouldThrow_WhenCurrentPasswordIsWrong()
+        {
+            // Arrange
+            var factory = new IdentityWebApplicationFactory()
+                .WithWebHostBuilder(b =>
+                {
+                    b.UseEnvironment("Testing");
+                });
+
+            var client = factory.CreateClient();
+
+            string email = "wrongcurrent@test.com";
+            string password = "StrongPass123!";
+            string newPassword = "NewStrongPass123!";
+
+            var request = new RegisterRequest()
+            {
+                Email = email,
+                Password = password
+            };
+
+            var response = await client.PostAsJsonAsync(
+                "/api/identity/register", request, TestContext.Current.CancellationToken);
+
+            var loginResponse = await client.PostAsJsonAsync(
+                "/api/identity/login",
+                new
+                {
+                    Email = email,
+                    Password = password
+                },
+                TestContext.Current.CancellationToken);
+
+            var auth = await loginResponse.Content.ReadFromJsonAsync<AuthResult>(TestContext.Current.CancellationToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth!.Token);
+
+            // Act
+            Func<Task> act = async () => await client.PutAsJsonAsync("/api/identity/me/password", new
+            {
+                CurrentPassword = "WrongCurrentPass123!",
                 NewPassword = newPassword
             },
             TestContext.Current.CancellationToken);

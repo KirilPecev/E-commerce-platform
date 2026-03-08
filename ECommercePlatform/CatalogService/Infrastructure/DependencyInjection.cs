@@ -15,14 +15,17 @@ namespace CatalogService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // DbContext
-            services
+            if (!environment.IsEnvironment("Testing"))
+            {
+                // DbContext
+                services
                 .AddDbContext<CatalogDbContext>(options =>
                     options.UseSqlServer(
                         configuration.GetConnectionString("CatalogDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(CatalogDbContext).Assembly.FullName)));
+            }
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

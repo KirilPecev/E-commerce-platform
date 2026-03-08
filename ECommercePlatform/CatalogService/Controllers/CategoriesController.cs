@@ -15,7 +15,8 @@ namespace CatalogService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class CategoriesController
-        (IMediator mediator) : ControllerBase
+        (IMediator mediator,
+        ILogger<CategoriesController> logger) : ControllerBase
     {
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
@@ -36,18 +37,26 @@ namespace CatalogService.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            CategoryDto? result = await mediator.Send(new GetCaterogyByIdQuery(id));
+            try
+            {
+                CategoryDto? result = await mediator.Send(new GetCaterogyByIdQuery(id));
 
-            if (result is null)
+                if (result is null)
+                    return NotFound();
+
+                CategoryResponse response = new CategoryResponse(
+                    result.Id,
+                    result.Name,
+                    result.Description
+                );
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation(ex.Message);
                 return NotFound();
-
-            CategoryResponse response = new CategoryResponse(
-                result.Id,
-                result.Name,
-                result.Description
-            );
-
-            return Ok(response);
+            }
         }
 
         [HttpGet]

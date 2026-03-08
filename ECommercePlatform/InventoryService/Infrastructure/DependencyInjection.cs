@@ -13,14 +13,17 @@ namespace InventoryService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // DbContext
-            services
+            if (!environment.IsEnvironment("Testing"))
+            {
+                // DbContext
+                services
                 .AddDbContext<InventoryDbContext>(options =>
                     options.UseSqlServer(
                         configuration.GetConnectionString("InventoryDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(InventoryDbContext).Assembly.FullName)));
+            }
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

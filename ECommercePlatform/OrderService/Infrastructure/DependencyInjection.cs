@@ -15,14 +15,17 @@ namespace OrderService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // DbContext
-            services
+            if (!environment.IsEnvironment("Testing"))
+            {
+                // DbContext
+                services
                 .AddDbContext<OrdersDbContext>(options =>
                     options.UseSqlServer(
                         configuration.GetConnectionString("OrdersDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(OrdersDbContext).Assembly.FullName)));
+            }
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

@@ -1,3 +1,4 @@
+using InventoryService.Infrastructure.Messaging.Consumers;
 using InventoryService.Infrastructure.Persistence;
 
 using MassTransit;
@@ -52,7 +53,11 @@ namespace InventoryService.Tests
                     options.Registrations.Clear();
                 });
 
-                services.AddMassTransitTestHarness();
+                services.AddMassTransitTestHarness(x =>
+                {
+                    x.AddConsumers(typeof(ProductCreatedIntegrationEventConsumer).Assembly);
+                    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("inventory", false));
+                });
 
                 // Build provider to create schema
                 var sp = services.BuildServiceProvider();

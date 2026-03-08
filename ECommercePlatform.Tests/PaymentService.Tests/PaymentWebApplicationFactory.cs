@@ -10,6 +10,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 using PaymentService.Application.Interfaces;
 using PaymentService.Application.Models;
+using PaymentService.Infrastructure.Messaging.Consumers;
 using PaymentService.Infrastructure.Persistence;
 
 namespace PaymentService.Tests
@@ -58,7 +59,10 @@ namespace PaymentService.Tests
                     options.Registrations.Clear();
                 });
 
-                services.AddMassTransitTestHarness();
+                services.AddMassTransitTestHarness(x =>
+                {
+                    x.AddConsumers(typeof(OrderFinalizedIntegrationEventConsumer).Assembly);
+                });
 
                 // Build provider to create schema
                 var sp = services.BuildServiceProvider();

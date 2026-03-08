@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
+using OrderService.Infrastructure.Messaging.Consumers;
 using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Tests
@@ -52,7 +53,10 @@ namespace OrderService.Tests
                     options.Registrations.Clear();
                 });
 
-                services.AddMassTransitTestHarness();
+                services.AddMassTransitTestHarness(x =>
+                {
+                    x.AddConsumers(typeof(PaymentCompletedEventConsumer).Assembly);
+                });
 
                 // Build provider to create schema
                 var sp = services.BuildServiceProvider();

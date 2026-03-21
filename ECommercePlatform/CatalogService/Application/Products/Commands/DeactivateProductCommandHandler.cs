@@ -1,7 +1,6 @@
 ﻿using CatalogService.Application.Exceptions;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
-using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
 
@@ -10,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Commands
 {
     public class DeactivateProductCommandHandler
-        (CatalogDbContext dbContext,
+        (ICatalogDbContext dbContext,
         IProductCache cache) : IRequestHandler<DeactivateProductCommand>
     {
         public async Task Handle(DeactivateProductCommand request, CancellationToken cancellationToken)

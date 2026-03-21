@@ -1,5 +1,5 @@
 ﻿
-using CatalogService.Infrastructure.Persistence;
+using CatalogService.Application.Interfaces;
 
 using MediatR;
 
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Queries
 {
     public class GetProductVariantByIdQueryHandler
-        (CatalogDbContext dbContext) : IRequestHandler<GetProductVariantByIdQuery, ProductVariantDto?>
+        (ICatalogDbContext dbContext) : IRequestHandler<GetProductVariantByIdQuery, ProductVariantDto?>
     {
         public async Task<ProductVariantDto?> Handle(GetProductVariantByIdQuery request, CancellationToken cancellationToken)
             => await dbContext

@@ -1,16 +1,15 @@
-﻿
-using MediatR;
+﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
 using OrderService.Domain.ValueObjects;
-using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
 {
     public class SetOrderAddressCommandHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<SetOrderAddressCommand>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<SetOrderAddressCommand>
     {
         public async Task Handle(SetOrderAddressCommand request, CancellationToken cancellationToken)
         {

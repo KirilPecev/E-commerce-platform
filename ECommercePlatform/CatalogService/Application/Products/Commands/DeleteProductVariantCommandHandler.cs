@@ -1,4 +1,4 @@
-﻿using CatalogService.Infrastructure.Persistence;
+﻿using CatalogService.Application.Interfaces;
 
 using MediatR;
 
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Commands
 {
     public class DeleteProductVariantCommandHandler
-        (CatalogDbContext dbContext) : IRequestHandler<DeleteProductVariantCommand>
+        (ICatalogDbContext dbContext) : IRequestHandler<DeleteProductVariantCommand>
     {
         public async Task Handle(DeleteProductVariantCommand request, CancellationToken cancellationToken)
         {

@@ -1,6 +1,6 @@
 ﻿
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
-using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
 
@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Categories.Commands
 {
     public class DeleteCategoryCommandHandler
-        (CatalogDbContext dbContext) : IRequestHandler<DeleteCategoryCommand>
+        (ICatalogDbContext dbContext) : IRequestHandler<DeleteCategoryCommand>
     {
         public async Task Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {

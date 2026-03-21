@@ -2,7 +2,6 @@
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Domain.ValueObjects;
-using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
 
@@ -11,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Commands
 {
     public class CreateProductCommandHandler
-        (CatalogDbContext dbContext,
+        (ICatalogDbContext dbContext,
         IProductCache cache) : IRequestHandler<CreateProductCommand, Guid>
     {
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)

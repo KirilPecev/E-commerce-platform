@@ -1,4 +1,5 @@
-﻿using CatalogService.Domain.Aggregates;
+﻿using CatalogService.Application.Interfaces;
+using CatalogService.Domain.Aggregates;
 
 using ECommercePlatform.Application.Interfaces;
 using ECommercePlatform.Domain.Abstractions;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Infrastructure.Persistence
 {
-    public class CatalogDbContext : DbContext
+    public class CatalogDbContext : DbContext, ICatalogDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 

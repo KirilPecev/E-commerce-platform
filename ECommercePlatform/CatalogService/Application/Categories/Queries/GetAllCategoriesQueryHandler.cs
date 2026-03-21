@@ -1,4 +1,4 @@
-﻿using CatalogService.Infrastructure.Persistence;
+﻿using CatalogService.Application.Interfaces;
 
 using MediatR;
 
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Categories.Queries
 {
     public class GetAllCategoriesQueryHandler
-        (CatalogDbContext dbContext) : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
+        (ICatalogDbContext dbContext) : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
     {
         public async Task<IEnumerable<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {

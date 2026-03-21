@@ -2,13 +2,14 @@
 using ECommercePlatform.Domain.Abstractions;
 using ECommercePlatform.Domain.Events;
 
+using InventoryService.Application.Interfaces;
 using InventoryService.Domain.Aggregates;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryService.Infrastructure.Persistence
 {
-    public class InventoryDbContext : DbContext
+    public class InventoryDbContext : DbContext, IInventoryDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 

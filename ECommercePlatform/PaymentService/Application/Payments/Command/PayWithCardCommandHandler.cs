@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using PaymentService.Application.Interfaces;
 using PaymentService.Application.Models;
 using PaymentService.Domain.Aggregates;
-using PaymentService.Infrastructure.Persistence;
 
 namespace PaymentService.Application.Payments.Command
 {
     public class PayWithCardCommandHandler
-        (PaymentDbContext paymentDbContext,
+        (IPaymentDbContext paymentDbContext,
         IPaymentGateway paymentGateway) : IRequestHandler<PayWithCardCommand>
     {
         public async Task Handle(PayWithCardCommand request, CancellationToken cancellationToken)

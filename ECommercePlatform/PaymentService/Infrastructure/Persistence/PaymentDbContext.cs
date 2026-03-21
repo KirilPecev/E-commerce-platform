@@ -4,11 +4,12 @@ using ECommercePlatform.Domain.Events;
 
 using Microsoft.EntityFrameworkCore;
 
+using PaymentService.Application.Interfaces;
 using PaymentService.Domain.Aggregates;
 
 namespace PaymentService.Infrastructure.Persistence
 {
-    public class PaymentDbContext : DbContext
+    public class PaymentDbContext : DbContext, IPaymentDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 

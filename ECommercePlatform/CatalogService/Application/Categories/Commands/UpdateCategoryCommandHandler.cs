@@ -1,6 +1,6 @@
 ﻿
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
-using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
 
@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Categories.Commands
 {
     public class UpdateCategoryCommandHandler
-        (CatalogDbContext dbContext) : IRequestHandler<UpdateCategoryCommand, Guid>
+        (ICatalogDbContext dbContext) : IRequestHandler<UpdateCategoryCommand, Guid>
     {
         public async Task<Guid> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {

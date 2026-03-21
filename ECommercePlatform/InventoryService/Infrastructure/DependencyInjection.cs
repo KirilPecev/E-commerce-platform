@@ -1,6 +1,7 @@
 ﻿using ECommercePlatform.Application.Interfaces;
 using ECommercePlatform.Identity;
 
+using InventoryService.Application.Interfaces;
 using InventoryService.Infrastructure.Messaging;
 using InventoryService.Infrastructure.Messaging.Consumers;
 using InventoryService.Infrastructure.Persistence;
@@ -24,6 +25,8 @@ namespace InventoryService.Infrastructure
                         configuration.GetConnectionString("InventoryDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(InventoryDbContext).Assembly.FullName)));
             }
+
+            services.AddScoped<IInventoryDbContext>(sp => sp.GetRequiredService<InventoryDbContext>());
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

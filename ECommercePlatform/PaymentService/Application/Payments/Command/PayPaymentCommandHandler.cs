@@ -3,13 +3,13 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using PaymentService.Application.Interfaces;
 using PaymentService.Domain.Aggregates;
-using PaymentService.Infrastructure.Persistence;
 
 namespace PaymentService.Application.Payments.Command
 {
     public class PayPaymentCommandHandler
-        (PaymentDbContext paymentDbContext) : IRequestHandler<PayPaymentCommand>
+        (IPaymentDbContext paymentDbContext) : IRequestHandler<PayPaymentCommand>
     {
         public async Task Handle(PayPaymentCommand request, CancellationToken cancellationToken)
         {

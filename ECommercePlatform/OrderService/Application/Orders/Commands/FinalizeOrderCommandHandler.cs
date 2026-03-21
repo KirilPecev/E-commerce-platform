@@ -2,13 +2,13 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
-using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
 {
     public class FinalizeOrderCommandHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<FinalizeOrderCommand>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<FinalizeOrderCommand>
     {
         public async Task Handle(FinalizeOrderCommand request, CancellationToken cancellationToken)
         {

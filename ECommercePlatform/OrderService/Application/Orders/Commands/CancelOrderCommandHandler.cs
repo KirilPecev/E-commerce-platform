@@ -1,15 +1,14 @@
-﻿
-using MediatR;
+﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
-using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
 {
     public class CancelOrderCommandHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<CancelOrderCommand>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<CancelOrderCommand>
     {
         public async Task Handle(CancelOrderCommand request, CancellationToken cancellationToken)
         {

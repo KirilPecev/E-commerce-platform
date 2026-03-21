@@ -4,11 +4,12 @@ using ECommercePlatform.Domain.Events;
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
 
 namespace OrderService.Infrastructure.Persistence
 {
-    public class OrdersDbContext : DbContext
+    public class OrdersDbContext : DbContext, IOrdersDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 

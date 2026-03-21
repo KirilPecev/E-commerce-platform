@@ -1,7 +1,7 @@
 ﻿using CatalogService.Application.Exceptions;
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
 using CatalogService.Domain.ValueObjects;
-using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
 
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Commands
 {
     public class UpdateProductVariantCommandHandler
-        (CatalogDbContext dbContext) : IRequestHandler<UpdateProductVariantCommand>
+        (ICatalogDbContext dbContext) : IRequestHandler<UpdateProductVariantCommand>
     {
         public async Task Handle(UpdateProductVariantCommand request, CancellationToken cancellationToken)
         {

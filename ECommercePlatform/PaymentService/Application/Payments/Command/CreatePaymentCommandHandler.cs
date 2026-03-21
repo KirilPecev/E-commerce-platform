@@ -1,14 +1,14 @@
 ﻿
 using MediatR;
 
+using PaymentService.Application.Interfaces;
 using PaymentService.Domain.Aggregates;
 using PaymentService.Domain.ValueObjects;
-using PaymentService.Infrastructure.Persistence;
 
 namespace PaymentService.Application.Payments.Command
 {
     public class CreatePaymentCommandHandler
-        (PaymentDbContext paymentDbContext) : IRequestHandler<CreatePaymentCommand, Guid>
+        (IPaymentDbContext paymentDbContext) : IRequestHandler<CreatePaymentCommand, Guid>
     {
         public async Task<Guid> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
         {

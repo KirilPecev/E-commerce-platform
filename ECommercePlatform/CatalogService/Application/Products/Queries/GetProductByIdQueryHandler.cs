@@ -1,6 +1,5 @@
 ﻿using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
-using CatalogService.Infrastructure.Persistence;
 
 using MediatR;
 
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Products.Queries
 {
     public class GetProductByIdQueryHandler
-        (CatalogDbContext dbContext,
+        (ICatalogDbContext dbContext,
         IProductCache cache) : IRequestHandler<GetProductByIdQuery, ProductDto?>
     {
         public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)

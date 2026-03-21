@@ -1,14 +1,13 @@
-﻿
-using MediatR;
+﻿using MediatR;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
 using OrderService.Domain.ValueObjects;
-using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
 {
     public class CreateOrderCommandHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<CreateOrderCommand, Guid>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<CreateOrderCommand, Guid>
     {
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {

@@ -1,5 +1,5 @@
 ﻿
-using InventoryService.Infrastructure.Persistence;
+using InventoryService.Application.Interfaces;
 
 using MediatR;
 
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace InventoryService.Application.Inventory.Queries
 {
     public class GetProductStocksQueryHandler
-        (InventoryDbContext inventoryDb) : IRequestHandler<GetProductStocksQuery, List<ProductStockDto>>
+        (IInventoryDbContext inventoryDb) : IRequestHandler<GetProductStocksQuery, List<ProductStockDto>>
     {
         public async Task<List<ProductStockDto>> Handle(GetProductStocksQuery request, CancellationToken cancellationToken)
             => await inventoryDb

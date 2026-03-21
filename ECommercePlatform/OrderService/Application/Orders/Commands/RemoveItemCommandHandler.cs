@@ -1,15 +1,14 @@
-﻿
-using MediatR;
+﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
-using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
 {
     public class RemoveItemCommandHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<RemoveItemCommand>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<RemoveItemCommand>
     {
         public async Task Handle(RemoveItemCommand request, CancellationToken cancellationToken)
         {

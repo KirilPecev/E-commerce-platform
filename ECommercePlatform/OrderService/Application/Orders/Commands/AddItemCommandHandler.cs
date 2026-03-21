@@ -1,16 +1,15 @@
-﻿
-using MediatR;
+﻿using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Aggregates;
 using OrderService.Domain.ValueObjects;
-using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
 {
     public class AddItemCommandHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<AddItemCommand>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<AddItemCommand>
     {
         public async Task Handle(AddItemCommand request, CancellationToken cancellationToken)
         {

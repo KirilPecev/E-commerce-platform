@@ -1,5 +1,5 @@
 ﻿
-using CatalogService.Infrastructure.Persistence;
+using CatalogService.Application.Interfaces;
 
 using MediatR;
 
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CatalogService.Application.Categories.Queries
 {
     public class GetCaterogyByIdQueryHandler
-        (CatalogDbContext dbContext) : IRequestHandler<GetCaterogyByIdQuery, CategoryDto?>
+        (ICatalogDbContext dbContext) : IRequestHandler<GetCaterogyByIdQuery, CategoryDto?>
     {
         public async Task<CategoryDto?> Handle(GetCaterogyByIdQuery request, CancellationToken cancellationToken)
         {

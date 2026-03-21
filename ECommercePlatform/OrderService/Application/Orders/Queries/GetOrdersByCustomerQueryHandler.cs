@@ -3,12 +3,12 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-using OrderService.Infrastructure.Persistence;
+using OrderService.Application.Interfaces;
 
 namespace OrderService.Application.Orders.Queries
 {
     public class GetOrdersByCustomerQueryHandler
-        (OrdersDbContext ordersDbContext) : IRequestHandler<GetOrdersByCustomerQuery, List<OrderDto>>
+        (IOrdersDbContext ordersDbContext) : IRequestHandler<GetOrdersByCustomerQuery, List<OrderDto>>
     {
         public async Task<List<OrderDto>> Handle(GetOrdersByCustomerQuery request, CancellationToken cancellationToken)
             => await ordersDbContext

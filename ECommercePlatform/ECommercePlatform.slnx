@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Tests/">
+    <Project Path="../ECommercePlatform.Tests/ArchitectureTests/ArchitectureTests.csproj" />
     <Project Path="../ECommercePlatform.Tests/CatalogService.Tests/CatalogService.Tests.csproj" />
     <Project Path="../ECommercePlatform.Tests/IdentityService.Tests/IdentityService.Tests.csproj" />
     <Project Path="../ECommercePlatform.Tests/InventoryService.Tests/InventoryService.Tests.csproj" />

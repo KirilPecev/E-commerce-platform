@@ -5,6 +5,7 @@ using MassTransit;
 
 using Microsoft.EntityFrameworkCore;
 
+using OrderService.Application.Interfaces;
 using OrderService.Infrastructure.Messaging;
 using OrderService.Infrastructure.Messaging.Consumers;
 using OrderService.Infrastructure.Persistence;
@@ -26,6 +27,8 @@ namespace OrderService.Infrastructure
                         configuration.GetConnectionString("OrdersDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(OrdersDbContext).Assembly.FullName)));
             }
+
+            services.AddScoped<IOrdersDbContext>(sp => sp.GetRequiredService<OrdersDbContext>());
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();

@@ -27,6 +27,8 @@ namespace PaymentService.Infrastructure
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(PaymentDbContext).Assembly.FullName)));
             }
 
+            services.AddScoped<IPaymentDbContext>(sp => sp.GetRequiredService<PaymentDbContext>());
+
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 

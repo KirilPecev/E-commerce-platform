@@ -1,5 +1,5 @@
-﻿using InventoryService.Domain.Aggregates;
-using InventoryService.Infrastructure.Persistence;
+﻿using InventoryService.Application.Interfaces;
+using InventoryService.Domain.Aggregates;
 
 using MediatR;
 
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace InventoryService.Application.Inventory.Commands
 {
     public class ReleaseStockCommandHandler
-        (InventoryDbContext inventoryDbContext) : IRequestHandler<ReleaseStockCommand>
+        (IInventoryDbContext inventoryDbContext) : IRequestHandler<ReleaseStockCommand>
     {
         public async Task Handle(ReleaseStockCommand request, CancellationToken cancellationToken)
         {

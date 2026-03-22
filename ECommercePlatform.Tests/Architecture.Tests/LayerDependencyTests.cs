@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using NetArchTest.Rules;
 
-namespace ArchitectureTests
+namespace Architecture.Tests
 {
     public class LayerDependencyTests
     {

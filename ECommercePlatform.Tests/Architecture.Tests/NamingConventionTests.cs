@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using NetArchTest.Rules;
 
-namespace ArchitectureTests
+namespace Architecture.Tests
 {
     public class NamingConventionTests
     {

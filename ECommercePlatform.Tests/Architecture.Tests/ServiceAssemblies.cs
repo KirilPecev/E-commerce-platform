@@ -5,7 +5,7 @@ using InventoryService.Domain.Aggregates;
 using OrderService.Domain.Aggregates;
 using PaymentService.Domain.Aggregates;
 
-namespace ArchitectureTests
+namespace Architecture.Tests
 {
     public static class ServiceAssemblies
     {

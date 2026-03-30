@@ -1,4 +1,5 @@
 ﻿using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Data;
 using ECommercePlatform.Identity;
 
 using InventoryService.Application.Interfaces;
@@ -27,12 +28,17 @@ namespace InventoryService.Infrastructure
             }
 
             services.AddScoped<IInventoryDbContext>(sp => sp.GetRequiredService<InventoryDbContext>());
+            services.AddScoped<MessageDbContext>(sp => sp.GetRequiredService<InventoryDbContext>());
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
-            // Integration event publisher
-            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
+            // Integration event publisher (writes to outbox)
+            services.AddScoped<IEventPublisher, OutboxEventPublisher>();
+
+            // Outbox message sender + background processor
+            services.AddScoped<IOutboxMessageSender, MassTransitOutboxMessageSender>();
+            services.AddHostedService<OutboxMessageProcessor>();
 
             // MassTransit + RabbitMQ
             services.AddMassTransit(x =>

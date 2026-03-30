@@ -1,3 +1,5 @@
+using ECommercePlatform.Data;
+
 using MassTransit;
 
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +55,12 @@ namespace PaymentService.Tests
                 {
                     services.Remove(descriptor);
                 }
+
+                // Remove outbox background processor to avoid concurrent SQLite access in tests
+                var outboxDescriptor = services.FirstOrDefault(d =>
+                    d.ImplementationType == typeof(OutboxMessageProcessor));
+                if (outboxDescriptor != null)
+                    services.Remove(outboxDescriptor);
 
                 services.Configure<HealthCheckServiceOptions>(options =>
                 {

@@ -1,7 +1,10 @@
-﻿using CatalogService.Application.Interfaces;
+﻿using System.Reflection;
+
+using CatalogService.Application.Interfaces;
 using CatalogService.Domain.Aggregates;
 
 using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Data;
 using ECommercePlatform.Domain.Abstractions;
 using ECommercePlatform.Domain.Events;
 
@@ -9,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Infrastructure.Persistence
 {
-    public class CatalogDbContext : DbContext, ICatalogDbContext
+    public class CatalogDbContext : MessageDbContext, ICatalogDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 
@@ -24,20 +27,16 @@ namespace CatalogService.Infrastructure.Persistence
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
 
+        protected override Assembly ConfigurationsAssembly => Assembly.GetExecutingAssembly();
+
         public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default)
         {
-            int result = await base.SaveChangesAsync(cancellationToken);
-
             await DispatchDomainEventsAsync();
 
-            return result;
-        }
+            int result = await base.SaveChangesAsync(cancellationToken);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(CatalogDbContext).Assembly);
+            return result;
         }
 
         private async Task DispatchDomainEventsAsync()

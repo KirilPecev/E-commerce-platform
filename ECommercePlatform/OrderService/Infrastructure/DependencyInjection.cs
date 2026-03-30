@@ -1,4 +1,5 @@
 ﻿using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Data;
 using ECommercePlatform.Identity;
 
 using MassTransit;
@@ -29,12 +30,17 @@ namespace OrderService.Infrastructure
             }
 
             services.AddScoped<IOrdersDbContext>(sp => sp.GetRequiredService<OrdersDbContext>());
+            services.AddScoped<MessageDbContext>(sp => sp.GetRequiredService<OrdersDbContext>());
 
             // Domain event dispatcher
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
-            // Integration event publisher
-            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
+            // Integration event publisher (writes to outbox)
+            services.AddScoped<IEventPublisher, OutboxEventPublisher>();
+
+            // Outbox message sender + background processor
+            services.AddScoped<IOutboxMessageSender, MassTransitOutboxMessageSender>();
+            services.AddHostedService<OutboxMessageProcessor>();
 
             // MassTransit + RabbitMQ
             services.AddMassTransit(x =>

@@ -1,3 +1,5 @@
+using ECommercePlatform.Data;
+
 using InventoryService.Infrastructure.Messaging.Consumers;
 using InventoryService.Infrastructure.Persistence;
 
@@ -47,6 +49,12 @@ namespace InventoryService.Tests
                 {
                     services.Remove(descriptor);
                 }
+
+                // Remove outbox background processor to avoid concurrent SQLite access in tests
+                var outboxDescriptor = services.FirstOrDefault(d =>
+                    d.ImplementationType == typeof(OutboxMessageProcessor));
+                if (outboxDescriptor != null)
+                    services.Remove(outboxDescriptor);
 
                 services.Configure<HealthCheckServiceOptions>(options =>
                 {

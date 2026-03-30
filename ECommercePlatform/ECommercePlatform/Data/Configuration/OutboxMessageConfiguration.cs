@@ -3,7 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CarRentalSystem.Data.Configuration
+namespace ECommercePlatform.Data.Configuration
 {
     public class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
     {

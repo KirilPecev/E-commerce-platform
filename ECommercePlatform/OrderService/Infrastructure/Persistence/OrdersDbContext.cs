@@ -1,4 +1,7 @@
-﻿using ECommercePlatform.Application.Interfaces;
+﻿using System.Reflection;
+
+using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Data;
 using ECommercePlatform.Domain.Abstractions;
 using ECommercePlatform.Domain.Events;
 
@@ -9,7 +12,7 @@ using OrderService.Domain.Aggregates;
 
 namespace OrderService.Infrastructure.Persistence
 {
-    public class OrdersDbContext : DbContext, IOrdersDbContext
+    public class OrdersDbContext : MessageDbContext, IOrdersDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 
@@ -22,20 +25,16 @@ namespace OrderService.Infrastructure.Persistence
         public DbSet<Order> Orders { get; set; } = default!;
         public DbSet<OrderItem> Items { get; set; } = default!;
 
+        protected override Assembly ConfigurationsAssembly => Assembly.GetExecutingAssembly();
+
         public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default)
         {
-            int result = await base.SaveChangesAsync(cancellationToken);
-
             await DispatchDomainEventsAsync();
 
-            return result;
-        }
+            int result = await base.SaveChangesAsync(cancellationToken);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(OrdersDbContext).Assembly);
+            return result;
         }
 
         private async Task DispatchDomainEventsAsync()

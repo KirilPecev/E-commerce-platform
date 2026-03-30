@@ -1,4 +1,6 @@
-﻿using CarRentalSystem.Data.Configuration;
+﻿using System.Reflection;
+
+using ECommercePlatform.Data.Configuration;
 
 using ECommercePlatform.Data.Models;
 
@@ -6,12 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ECommercePlatform.Data
 {
-    public class MessageDbContext : DbContext
+    public abstract class MessageDbContext : DbContext
     {
-        protected MessageDbContext(DbContextOptions<MessageDbContext> options)
+        protected MessageDbContext(DbContextOptions options)
             : base(options) { }
 
-        public DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
+
+        protected abstract Assembly ConfigurationsAssembly { get; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

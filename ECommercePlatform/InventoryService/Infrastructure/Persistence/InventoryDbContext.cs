@@ -1,4 +1,7 @@
-﻿using ECommercePlatform.Application.Interfaces;
+﻿using System.Reflection;
+
+using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Data;
 using ECommercePlatform.Domain.Abstractions;
 using ECommercePlatform.Domain.Events;
 
@@ -9,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryService.Infrastructure.Persistence
 {
-    public class InventoryDbContext : DbContext, IInventoryDbContext
+    public class InventoryDbContext : MessageDbContext, IInventoryDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 
@@ -22,20 +25,16 @@ namespace InventoryService.Infrastructure.Persistence
         public DbSet<ProductStock> ProductStocks { get; set; }
         public DbSet<StockReservation> StockReservations { get; set; }
 
+        protected override Assembly ConfigurationsAssembly => Assembly.GetExecutingAssembly();
+
         public override async Task<int> SaveChangesAsync(
            CancellationToken cancellationToken = default)
         {
-            int result = await base.SaveChangesAsync(cancellationToken);
-
             await DispatchDomainEventsAsync();
 
-            return result;
-        }
+            int result = await base.SaveChangesAsync(cancellationToken);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(InventoryDbContext).Assembly);
+            return result;
         }
 
         private async Task DispatchDomainEventsAsync()

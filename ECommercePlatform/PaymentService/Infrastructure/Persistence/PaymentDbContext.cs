@@ -1,4 +1,7 @@
-﻿using ECommercePlatform.Application.Interfaces;
+﻿using System.Reflection;
+
+using ECommercePlatform.Application.Interfaces;
+using ECommercePlatform.Data;
 using ECommercePlatform.Domain.Abstractions;
 using ECommercePlatform.Domain.Events;
 
@@ -9,7 +12,7 @@ using PaymentService.Domain.Aggregates;
 
 namespace PaymentService.Infrastructure.Persistence
 {
-    public class PaymentDbContext : DbContext, IPaymentDbContext
+    public class PaymentDbContext : MessageDbContext, IPaymentDbContext
     {
         public readonly IDomainEventDispatcher dispatcher;
 
@@ -21,20 +24,16 @@ namespace PaymentService.Infrastructure.Persistence
 
         public DbSet<Payment> Payments { get; set; } = default!;
 
+        protected override Assembly ConfigurationsAssembly => Assembly.GetExecutingAssembly();
+
         public override async Task<int> SaveChangesAsync(
           CancellationToken cancellationToken = default)
         {
-            int result = await base.SaveChangesAsync(cancellationToken);
-
             await DispatchDomainEventsAsync();
 
-            return result;
-        }
+            int result = await base.SaveChangesAsync(cancellationToken);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(PaymentDbContext).Assembly);
+            return result;
         }
 
         private async Task DispatchDomainEventsAsync()

@@ -11,8 +11,6 @@ using OrderService.Infrastructure.Messaging;
 using OrderService.Infrastructure.Messaging.Consumers;
 using OrderService.Infrastructure.Persistence;
 
-using static MassTransit.Monitoring.Performance.BuiltInCounters;
-
 namespace OrderService.Infrastructure
 {
     public static class DependencyInjection
@@ -60,6 +58,11 @@ namespace OrderService.Infrastructure
                         h.Username(rabbitMqUsername);
                         h.Password(rabbitMqPassword);
                     });
+
+                    cfg.UseMessageRetry(r => r.Intervals(
+                        TimeSpan.FromSeconds(1),
+                        TimeSpan.FromSeconds(5),
+                        TimeSpan.FromSeconds(15)));
 
                     cfg.ConfigureEndpoints(context);
                 });

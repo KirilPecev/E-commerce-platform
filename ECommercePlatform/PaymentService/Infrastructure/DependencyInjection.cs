@@ -61,6 +61,11 @@ namespace PaymentService.Infrastructure
                         h.Password(rabbitMqPassword);
                     });
 
+                    cfg.UseMessageRetry(r => r.Intervals(
+                        TimeSpan.FromSeconds(1),
+                        TimeSpan.FromSeconds(5),
+                        TimeSpan.FromSeconds(15)));
+
                     cfg.ConfigureEndpoints(context);
                 });
             });

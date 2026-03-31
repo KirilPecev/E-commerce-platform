@@ -8,7 +8,12 @@ namespace ECommercePlatform.Data.Models
     {
         private string serializedData = default!;
 
-        public OutboxMessage(object data) => this.Data = data;
+        public OutboxMessage(object data)
+        {
+            this.Id = Guid.NewGuid();
+            this.CreatedAt = DateTime.UtcNow;
+            this.Data = data;
+        }
 
         public OutboxMessage() { }
 
@@ -18,7 +23,15 @@ namespace ECommercePlatform.Data.Models
 
         public bool Published { get; private set; }
 
-        public void MarkAsPublished() => this.Published = true;
+        public DateTime CreatedAt { get; private set; }
+
+        public DateTime? PublishedAt { get; private set; }
+
+        public void MarkAsPublished()
+        {
+            this.Published = true;
+            this.PublishedAt = DateTime.UtcNow;
+        }
 
         [NotMapped]
         public object Data

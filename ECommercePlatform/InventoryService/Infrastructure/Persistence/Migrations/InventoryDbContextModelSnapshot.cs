@@ -28,8 +28,14 @@ namespace InventoryService.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Published")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -37,9 +43,13 @@ namespace InventoryService.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("serializedData")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("SerializedData");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Published", "CreatedAt")
+                        .HasDatabaseName("IX_OutboxMessages_Published_CreatedAt");
 
                     b.ToTable("OutboxMessages");
                 });

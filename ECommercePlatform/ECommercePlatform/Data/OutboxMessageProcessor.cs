@@ -43,7 +43,7 @@ namespace ECommercePlatform.Data
 
             var messages = await dbContext.OutboxMessages
                 .Where(m => !m.Published)
-                .OrderBy(m => m.Id)
+                .OrderBy(m => m.CreatedAt)
                 .Take(20)
                 .ToListAsync(cancellationToken);
 
@@ -54,13 +54,16 @@ namespace ECommercePlatform.Data
                     await sender.SendAsync(message.Data, message.Type, cancellationToken);
 
                     message.MarkAsPublished();
-
-                    await dbContext.SaveChangesAsync(cancellationToken);
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "Failed to publish outbox message {MessageId}.", message.Id);
                 }
+            }
+
+            if (messages.Any(m => m.Published))
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
     }

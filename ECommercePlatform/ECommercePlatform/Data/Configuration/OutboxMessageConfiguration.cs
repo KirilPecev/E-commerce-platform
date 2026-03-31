@@ -15,7 +15,8 @@ namespace ECommercePlatform.Data.Configuration
             builder
                 .Property<string>("serializedData")
                 .IsRequired()
-                .HasField("serializedData");
+                .HasField("serializedData")
+                .HasColumnName("SerializedData");
 
             builder
                 .Property(m => m.Type)
@@ -23,6 +24,18 @@ namespace ECommercePlatform.Data.Configuration
                 .HasConversion(
                     t => t.AssemblyQualifiedName,
                     t => Type.GetType(t));
+
+            builder
+                .Property(m => m.CreatedAt)
+                .IsRequired();
+
+            builder
+                .Property(m => m.PublishedAt)
+                .IsRequired(false);
+
+            builder
+                .HasIndex(m => new { m.Published, m.CreatedAt })
+                .HasDatabaseName("IX_OutboxMessages_Published_CreatedAt");
         }
     }
 }

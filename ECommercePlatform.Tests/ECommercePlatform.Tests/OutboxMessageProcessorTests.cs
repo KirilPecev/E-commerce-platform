@@ -151,6 +151,62 @@ namespace ECommercePlatform.Tests
         }
 
         [Fact]
+        public async Task ProcessOutboxMessages_WhenSenderFails_ShouldRecordErrorOnMessage()
+        {
+            this.senderMock
+                .Setup(s => s.SendAsync(It.IsAny<object>(), It.IsAny<Type>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new InvalidOperationException("Send failed"));
+
+            var testEvent = new TestEvent("test-value");
+            var message = new OutboxMessage(testEvent);
+            this.dbContext.OutboxMessages.Add(message);
+            await this.dbContext.SaveChangesAsync();
+
+            using var cts = new CancellationTokenSource();
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(500);
+                cts.Cancel();
+            });
+
+            try { await this.processor.StartAsync(cts.Token); } catch (OperationCanceledException) { }
+            await Task.Delay(200);
+
+            var updatedMessage = this.dbContext.OutboxMessages.First();
+            updatedMessage.RetryCount.Should().BeGreaterThan(0);
+            updatedMessage.Error.Should().Be("Send failed");
+        }
+
+        [Fact]
+        public async Task ProcessOutboxMessages_ShouldSkipMessagesExceedingMaxRetries()
+        {
+            var testEvent = new TestEvent("test-value");
+            var message = new OutboxMessage(testEvent);
+            for (int i = 0; i < 5; i++)
+            {
+                message.RecordFailure($"Error {i}");
+            }
+
+            this.dbContext.OutboxMessages.Add(message);
+            await this.dbContext.SaveChangesAsync();
+
+            using var cts = new CancellationTokenSource();
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(500);
+                cts.Cancel();
+            });
+
+            try { await this.processor.StartAsync(cts.Token); } catch (OperationCanceledException) { }
+            await Task.Delay(200);
+
+            this.senderMock.Verify(s => s.SendAsync(
+                It.IsAny<object>(),
+                It.IsAny<Type>(),
+                It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
         public async Task ProcessOutboxMessages_ShouldProcessMultipleMessages()
         {
             for (int i = 0; i < 5; i++)

@@ -6,6 +6,9 @@ namespace ECommercePlatform.Data.Models
 {
     public class OutboxMessage
     {
+        private static readonly JsonSerializerSettings SerializerSettings =
+            new() { NullValueHandling = NullValueHandling.Ignore };
+
         private string serializedData = default!;
 
         public OutboxMessage(object data)
@@ -27,24 +30,35 @@ namespace ECommercePlatform.Data.Models
 
         public DateTime? PublishedAt { get; private set; }
 
+        public int RetryCount { get; private set; }
+
+        public string? Error { get; private set; }
+
         public void MarkAsPublished()
         {
             this.Published = true;
             this.PublishedAt = DateTime.UtcNow;
+            this.Error = null;
+        }
+
+        public void RecordFailure(string error)
+        {
+            this.RetryCount++;
+            this.Error = error;
         }
 
         [NotMapped]
         public object Data
         {
             get => JsonConvert.DeserializeObject(this.serializedData, this.Type,
-                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }) ?? new();
+                SerializerSettings) ?? new();
 
             set
             {
                 this.Type = value.GetType();
 
                 this.serializedData = JsonConvert.SerializeObject(value,
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    SerializerSettings);
             }
         }
     }

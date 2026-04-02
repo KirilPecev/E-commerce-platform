@@ -11,7 +11,14 @@ namespace ECommercePlatform.Data
         IServiceScopeFactory scopeFactory,
         ILogger<OutboxMessageProcessor> logger) : BackgroundService
     {
+        private const int MaxRetries = 5;
+        private const int BatchSize = 20;
+
         private static readonly TimeSpan PollingInterval = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan CleanupInterval = TimeSpan.FromHours(1);
+        private static readonly TimeSpan PublishedMessageRetention = TimeSpan.FromDays(7);
+
+        private DateTime lastCleanup = DateTime.MinValue;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -20,6 +27,7 @@ namespace ECommercePlatform.Data
                 try
                 {
                     await ProcessOutboxMessagesAsync(stoppingToken);
+                    await CleanupPublishedMessagesAsync(stoppingToken);
                 }
                 catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                 {
@@ -42,9 +50,9 @@ namespace ECommercePlatform.Data
             var sender = scope.ServiceProvider.GetRequiredService<IOutboxMessageSender>();
 
             var messages = await dbContext.OutboxMessages
-                .Where(m => !m.Published)
+                .Where(m => !m.Published && m.RetryCount < MaxRetries)
                 .OrderBy(m => m.CreatedAt)
-                .Take(20)
+                .Take(BatchSize)
                 .ToListAsync(cancellationToken);
 
             foreach (var message in messages)
@@ -57,13 +65,43 @@ namespace ECommercePlatform.Data
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Failed to publish outbox message {MessageId}.", message.Id);
+                    message.RecordFailure(ex.Message);
+
+                    logger.LogError(ex, "Failed to publish outbox message {MessageId}. Retry {RetryCount}/{MaxRetries}.",
+                        message.Id, message.RetryCount, MaxRetries);
                 }
             }
 
-            if (messages.Any(m => m.Published))
+            if (messages.Count > 0)
             {
                 await dbContext.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        private async Task CleanupPublishedMessagesAsync(CancellationToken cancellationToken)
+        {
+            if (DateTime.UtcNow - lastCleanup < CleanupInterval)
+            {
+                return;
+            }
+
+            lastCleanup = DateTime.UtcNow;
+
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
+
+            var cutoff = DateTime.UtcNow - PublishedMessageRetention;
+
+            var oldMessages = await dbContext.OutboxMessages
+                .Where(m => m.Published && m.PublishedAt < cutoff)
+                .ToListAsync(cancellationToken);
+
+            if (oldMessages.Count > 0)
+            {
+                dbContext.OutboxMessages.RemoveRange(oldMessages);
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                logger.LogInformation("Cleaned up {Count} published outbox messages.", oldMessages.Count);
             }
         }
     }

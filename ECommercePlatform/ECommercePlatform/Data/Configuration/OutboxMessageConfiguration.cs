@@ -34,6 +34,15 @@ namespace ECommercePlatform.Data.Configuration
                 .IsRequired(false);
 
             builder
+                .Property(m => m.RetryCount)
+                .IsRequired()
+                .HasDefaultValue(0);
+
+            builder
+                .Property(m => m.Error)
+                .IsRequired(false);
+
+            builder
                 .HasIndex(m => new { m.Published, m.CreatedAt })
                 .HasDatabaseName("IX_OutboxMessages_Published_CreatedAt");
         }

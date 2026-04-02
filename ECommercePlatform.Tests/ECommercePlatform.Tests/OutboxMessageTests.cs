@@ -122,6 +122,66 @@ namespace ECommercePlatform.Tests
             deserialized.Description.Should().BeNull();
         }
 
+        [Fact]
+        public void Constructor_WithData_ShouldInitializeRetryCountToZero()
+        {
+            var message = new OutboxMessage(new TestEvent("test"));
+
+            message.RetryCount.Should().Be(0);
+        }
+
+        [Fact]
+        public void Constructor_WithData_ShouldInitializeErrorToNull()
+        {
+            var message = new OutboxMessage(new TestEvent("test"));
+
+            message.Error.Should().BeNull();
+        }
+
+        [Fact]
+        public void RecordFailure_ShouldIncrementRetryCount()
+        {
+            var message = new OutboxMessage(new TestEvent("test"));
+
+            message.RecordFailure("Some error");
+
+            message.RetryCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void RecordFailure_CalledMultipleTimes_ShouldTrackAllRetries()
+        {
+            var message = new OutboxMessage(new TestEvent("test"));
+
+            message.RecordFailure("Error 1");
+            message.RecordFailure("Error 2");
+            message.RecordFailure("Error 3");
+
+            message.RetryCount.Should().Be(3);
+        }
+
+        [Fact]
+        public void RecordFailure_ShouldStoreLatestError()
+        {
+            var message = new OutboxMessage(new TestEvent("test"));
+
+            message.RecordFailure("First error");
+            message.RecordFailure("Second error");
+
+            message.Error.Should().Be("Second error");
+        }
+
+        [Fact]
+        public void MarkAsPublished_ShouldClearError()
+        {
+            var message = new OutboxMessage(new TestEvent("test"));
+            message.RecordFailure("Some error");
+
+            message.MarkAsPublished();
+
+            message.Error.Should().BeNull();
+        }
+
         public record TestEvent(string Value);
 
         public record ComplexTestEvent(int Id, string Name, List<int> Items);

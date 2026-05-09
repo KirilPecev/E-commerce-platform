@@ -2,6 +2,7 @@ using ECommercePlatform.Identity;
 
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,8 @@ builder
 
 builder
     .Services
-    .AddOcelot(builder.Configuration);
+    .AddOcelot(builder.Configuration)
+    .AddPolly();
 
 builder
     .Services

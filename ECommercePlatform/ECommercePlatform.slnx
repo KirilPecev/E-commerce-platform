@@ -8,6 +8,7 @@
     <Project Path="../ECommercePlatform.Tests/OrderService.Tests/OrderService.Tests.csproj" />
     <Project Path="../ECommercePlatform.Tests/PaymentService.Tests/PaymentService.Tests.csproj" />
   </Folder>
+  <Project Path="ApiGateway/ApiGateway.csproj" Id="33032d17-ec64-4d2a-adbc-0a360a97665f" />
   <Project Path="CatalogService/CatalogService.csproj" />
   <Project Path="ECommercePlatform/ECommercePlatform.csproj" />
   <Project Path="IdentityService/IdentityService.csproj" />

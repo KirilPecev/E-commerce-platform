@@ -1,0 +1,15 @@
+{
+  "Routes": [
+    { "DownstreamHostAndPorts": [ { "Host": "identity", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "catalog", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "catalog", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "catalog", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "catalog", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "inventory", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "order", "Port": 8080 } ] },
+    { "DownstreamHostAndPorts": [ { "Host": "payment", "Port": 8080 } ] }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://api-gateway:8080"
+  }
+}

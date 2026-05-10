@@ -44,6 +44,24 @@ services:
     networks:
       - ecommerce_net
 
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./ECommercePlatform
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - identity
+      - catalog
+      - inventory
+      - order
+      - payment
+    networks:
+      - ecommerce_net
+
   identity:
     container_name: identity
     build:

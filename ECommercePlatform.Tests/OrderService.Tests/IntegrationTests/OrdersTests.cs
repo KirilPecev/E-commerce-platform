@@ -164,7 +164,7 @@ namespace OrderService.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Finalize_ShouldThrow_WhenNoAddress()
+        public async Task Finalize_ShouldReturnBadRequest_WhenNoAddress()
         {
             // Arrange
             var client = CreateAuthenticatedClient();
@@ -172,11 +172,11 @@ namespace OrderService.Tests.IntegrationTests
             var orderId = await CreateOrderAsync(client);
 
             // Act
-            Func<Task> act = async () => await client.PostAsync(
-                $"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
+            var response = await client.PostAsync($"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]
@@ -199,7 +199,7 @@ namespace OrderService.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Cancel_ShouldThrow_WhenNoReason()
+        public async Task Cancel_ShouldReturnBadRequest_WhenNoReason()
         {
             // Arrange
             var client = CreateAuthenticatedClient();
@@ -207,14 +207,15 @@ namespace OrderService.Tests.IntegrationTests
             var orderId = await CreateOrderAsync(client);
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync($"/api/orders/{orderId}/cancel", new
+            var response = await client.PostAsJsonAsync($"/api/orders/{orderId}/cancel", new
             {
                 Reason = ""
             },
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]
@@ -240,7 +241,7 @@ namespace OrderService.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Ship_ShouldThrow_WhenOrderNotPaid()
+        public async Task Ship_ShouldReturnBadRequest_WhenOrderNotPaid()
         {
             // Arrange
             var client = CreateAuthenticatedClient("Admin");
@@ -257,18 +258,18 @@ namespace OrderService.Tests.IntegrationTests
             },
             TestContext.Current.CancellationToken);
 
-            await client.PostAsync(
-                $"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
+            await client.PostAsync($"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
 
             // Act — order is Finalized but not Paid
-            Func<Task> act = async () => await client.PostAsJsonAsync($"/api/orders/{orderId}/ship", new
+            var response = await client.PostAsJsonAsync($"/api/orders/{orderId}/ship", new
             {
                 TrackingNumber = "TRACK123"
             },
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]

@@ -1,3 +1,5 @@
+using ECommercePlatform.Middleware;
+
 using IdentityService.Application;
 using IdentityService.Infrastructure;
 
@@ -24,6 +26,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Global exception handling
+app.UseExceptionHandling();
 
 app.UseHttpsRedirection();
 

@@ -121,7 +121,7 @@ namespace PaymentService.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task PayWithCard_ShouldThrow_WhenPaymentNotFound()
+        public async Task PayWithCard_ShouldReturnNotFound_WhenPaymentNotFound()
         {
             // Arrange
             var factory = new PaymentWebApplicationFactory()
@@ -132,7 +132,7 @@ namespace PaymentService.Tests.IntegrationTests
                 new AuthenticationHeaderValue("Bearer", PaymentTestTokenGenerator.GenerateCustomerToken());
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync("/api/payment/pay", new
+            var response = await client.PostAsJsonAsync("/api/payment/pay", new
             {
                 PaymentId = Guid.NewGuid(),
                 CardNumber = "4111111111111111",
@@ -143,11 +143,12 @@ namespace PaymentService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<KeyNotFoundException>();
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]
-        public async Task PayWithCard_ShouldThrow_WhenPaymentAlreadyPaid()
+        public async Task PayWithCard_ShouldReturnBadRequest_WhenPaymentAlreadyPaid()
         {
             // Arrange
             var factory = new PaymentWebApplicationFactory()
@@ -174,7 +175,7 @@ namespace PaymentService.Tests.IntegrationTests
                 new AuthenticationHeaderValue("Bearer", PaymentTestTokenGenerator.GenerateCustomerToken());
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync("/api/payment/pay", new
+            var response = await client.PostAsJsonAsync("/api/payment/pay", new
             {
                 PaymentId = paymentId,
                 CardNumber = "4111111111111111",
@@ -185,7 +186,8 @@ namespace PaymentService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
     }
 }

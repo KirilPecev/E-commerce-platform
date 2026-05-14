@@ -73,7 +73,7 @@ namespace IdentityService.Tests.IntegrationTests
 
             loginResponseAfterChange.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            Func<Task> loginWithOldPassword = async () => await client.PostAsJsonAsync(
+            var loginWithOldPasswordResponse = await client.PostAsJsonAsync(
                 "/api/identity/login",
                 new
                 {
@@ -82,7 +82,7 @@ namespace IdentityService.Tests.IntegrationTests
                 },
                 TestContext.Current.CancellationToken);
 
-            await loginWithOldPassword.Should().ThrowAsync<UnauthorizedAccessException>();
+            loginWithOldPasswordResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace IdentityService.Tests.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth!.Token);
 
             // Act
-            Func<Task> act = async () => await client.PutAsJsonAsync("/api/identity/me/password", new
+            var newInvalidPasswordResponse = await client.PutAsJsonAsync("/api/identity/me/password", new
             {
                 CurrentPassword = password,
                 NewPassword = newPassword
@@ -168,7 +168,7 @@ namespace IdentityService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<IdentityException>();
+            newInvalidPasswordResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace IdentityService.Tests.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth!.Token);
 
             // Act
-            Func<Task> act = async () => await client.PutAsJsonAsync("/api/identity/me/password", new
+            var wrongCurrentPasswordResponse = await client.PutAsJsonAsync("/api/identity/me/password", new
             {
                 CurrentPassword = "WrongCurrentPass123!",
                 NewPassword = newPassword
@@ -217,7 +217,7 @@ namespace IdentityService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<IdentityException>();
+            wrongCurrentPasswordResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }

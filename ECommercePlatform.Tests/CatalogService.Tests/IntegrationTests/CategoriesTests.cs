@@ -98,15 +98,16 @@ namespace CatalogService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync("/api/categories", new
+            var response = await client.PostAsJsonAsync("/api/categories", new
             {
                 Name = "Duplicate",
                 Description = "Second"
             },
             TestContext.Current.CancellationToken);
 
-            // Assert
-            await act.Should().ThrowAsync<InvalidOperationException>();
+            // Assert: middleware converts exceptions to ProblemDetails responses
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response!.Content!.Headers!.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]

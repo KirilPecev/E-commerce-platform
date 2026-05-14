@@ -70,7 +70,7 @@ namespace IdentityService.Tests.IntegrationTests
             var client = factory.CreateClient();
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync("/api/identity/login", new
+            var response = await client.PostAsJsonAsync("/api/identity/login", new
             {
                 Email = "test@test.com",
                 Password = "Password123!"
@@ -78,7 +78,7 @@ namespace IdentityService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<UnauthorizedAccessException>();
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace IdentityService.Tests.IntegrationTests
             registerResponse.EnsureSuccessStatusCode();
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync("/api/identity/login", new
+            var response = await client.PostAsJsonAsync("/api/identity/login", new
             {
                 Email = email,
                 Password = "WrongPassword123!"
@@ -116,7 +116,7 @@ namespace IdentityService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<UnauthorizedAccessException>();
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

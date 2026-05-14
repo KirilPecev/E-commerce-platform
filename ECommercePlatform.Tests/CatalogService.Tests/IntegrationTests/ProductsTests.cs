@@ -84,7 +84,7 @@ namespace CatalogService.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Create_ShouldThrow_WhenCategoryNotFound()
+        public async Task Create_ShouldReturnNotFound_WhenCategoryNotFound()
         {
             // Arrange
             var factory = new CatalogWebApplicationFactory()
@@ -95,7 +95,7 @@ namespace CatalogService.Tests.IntegrationTests
                 new AuthenticationHeaderValue("Bearer", CatalogTestTokenGenerator.GenerateAdminToken());
 
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync("/api/products", new
+            var response = await client.PostAsJsonAsync("/api/products", new
             {
                 Name = "Test Product",
                 Amount = 99.99m,
@@ -106,7 +106,9 @@ namespace CatalogService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<KeyNotFoundException>();
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            response!.Content!.Headers!.ContentType!.MediaType.Should().Be("application/problem+json");
+            response.Headers.Contains("X-Correlation-Id").Should().BeTrue();
         }
 
         [Fact]

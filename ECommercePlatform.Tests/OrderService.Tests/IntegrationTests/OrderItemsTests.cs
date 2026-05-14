@@ -49,9 +49,8 @@ namespace OrderService.Tests.IntegrationTests
         {
             // Arrange
             var client = CreateAuthenticatedClient();
-
             // Act
-            Func<Task> act = async () => await client.PostAsJsonAsync($"/api/orders/{Guid.NewGuid()}/items", new
+            var response = await client.PostAsJsonAsync($"/api/orders/{Guid.NewGuid()}/items", new
             {
                 ProductId = Guid.NewGuid(),
                 ProductVariantId = Guid.NewGuid(),
@@ -63,7 +62,8 @@ namespace OrderService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<KeyNotFoundException>();
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]
@@ -142,13 +142,13 @@ namespace OrderService.Tests.IntegrationTests
         {
             // Arrange
             var client = CreateAuthenticatedClient();
-
             // Act
-            Func<Task> act = async () => await client.DeleteAsync(
+            var response = await client.DeleteAsync(
                 $"/api/orders/{Guid.NewGuid()}/items/{Guid.NewGuid()}", TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<KeyNotFoundException>();
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]

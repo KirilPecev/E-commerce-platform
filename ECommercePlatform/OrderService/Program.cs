@@ -1,3 +1,5 @@
+using ECommercePlatform.Middleware;
+
 using OrderService.Application;
 using OrderService.Infrastructure;
 
@@ -22,6 +24,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Global exception handling
+app.UseExceptionHandling();
 
 app.UseHttpsRedirection();
 

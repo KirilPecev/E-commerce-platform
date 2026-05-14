@@ -32,11 +32,12 @@ namespace IdentityService.Tests.IntegrationTests
                 Password = "StrongPass123!"
             };
 
-            Func<Task> act = async () => await client.PostAsJsonAsync(
+            var response = await client.PostAsJsonAsync(
                 "/api/identity/register", request, TestContext.Current.CancellationToken);
 
-            // Assert
-            await act.Should().ThrowAsync<IdentityException>();
+            // Assert: middleware returns ProblemDetails for identity errors
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]
@@ -56,11 +57,12 @@ namespace IdentityService.Tests.IntegrationTests
                 Password = "strong"
             };
 
-            Func<Task> act = async () => await client.PostAsJsonAsync(
+            var response = await client.PostAsJsonAsync(
                 "/api/identity/register", request, TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<IdentityException>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
 
@@ -138,10 +140,12 @@ namespace IdentityService.Tests.IntegrationTests
 
             firstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            Func<Task> act = async () => await client.PostAsJsonAsync(
+            var response = await client.PostAsJsonAsync(
                 "/api/identity/register", request, TestContext.Current.CancellationToken);
 
-            await act.Should().ThrowAsync<IdentityException>();
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
     }
 }

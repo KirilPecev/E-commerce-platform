@@ -280,11 +280,11 @@ namespace OrderService.Tests.IntegrationTests
             },
             TestContext.Current.CancellationToken);
 
-            // Try to finalize — should fail because no items
-            Func<Task> act = async () => await client.PostAsync(
-                $"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
+            // Try to finalize — should return BadRequest because no items
+            var response = await client.PostAsync($"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
 
-            await act.Should().ThrowAsync<Exception>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]
@@ -322,7 +322,7 @@ namespace OrderService.Tests.IntegrationTests
                 $"/api/orders/{orderId}/finalize", null, TestContext.Current.CancellationToken);
 
             // Act — try to add item after finalize
-            Func<Task> act = async () => await client.PostAsJsonAsync($"/api/orders/{orderId}/items", new
+            var addResponse = await client.PostAsJsonAsync($"/api/orders/{orderId}/items", new
             {
                 ProductId = Guid.NewGuid(),
                 ProductVariantId = Guid.NewGuid(),
@@ -334,7 +334,8 @@ namespace OrderService.Tests.IntegrationTests
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            addResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            addResponse.Content.Headers.ContentType!.MediaType.Should().Be("application/problem+json");
         }
 
         [Fact]

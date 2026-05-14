@@ -41,7 +41,7 @@ namespace IdentityService.Tests.IntegrationTests
                 Password = password
             };
 
-            var response = await client.PostAsJsonAsync(
+            var registerResponse = await client.PostAsJsonAsync(
                 "/api/identity/register", request, TestContext.Current.CancellationToken);
 
             var loginResponse = await client.PostAsJsonAsync(
@@ -99,7 +99,7 @@ namespace IdentityService.Tests.IntegrationTests
                 Password = password
             };
 
-            var response = await client.PostAsJsonAsync(
+            var registerResponse = await client.PostAsJsonAsync(
                 "/api/identity/register", request, TestContext.Current.CancellationToken);
 
             var loginResponse = await client.PostAsJsonAsync(
@@ -179,13 +179,14 @@ namespace IdentityService.Tests.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAuth!.Token);
 
             // Act
-            Func<Task> act = async () => await client.PutAsJsonAsync($"/api/identity/d5194374-6037-4fd8-5b24-08de5b8ac4ed/roles", new
+            var invalidUserResponse = await client.PutAsJsonAsync($"/api/identity/d5194374-6037-4fd8-5b24-08de5b8ac4ed/roles", new
             {
                 Roles = new[] { "Admin", "Customer" }
             },
             TestContext.Current.CancellationToken);
 
-            await act.Should().ThrowAsync<InvalidOperationException>();
+            // Assert
+            invalidUserResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -243,13 +244,14 @@ namespace IdentityService.Tests.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAuth!.Token);
 
             // Act
-            Func<Task> act = async () => await client.PutAsJsonAsync($"/api/identity/{auth.UserId}/roles", new
+            var invalidRoleResponse = await client.PutAsJsonAsync($"/api/identity/{auth.UserId}/roles", new
             {
                 Roles = new[] { "TestRole" }
             },
             TestContext.Current.CancellationToken);
 
-            await act.Should().ThrowAsync<InvalidOperationException>();
+            // Assert
+            invalidRoleResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -393,14 +395,14 @@ namespace IdentityService.Tests.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAuth!.Token);
 
             // Act
-            Func<Task> act = async () => await client.PutAsJsonAsync($"/api/identity/{auth!.UserId}/roles", new
+            var response = await client.PutAsJsonAsync($"/api/identity/{auth!.UserId}/roles", new
             {
                 Roles = Array.Empty<string>()
             },
             TestContext.Current.CancellationToken);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }

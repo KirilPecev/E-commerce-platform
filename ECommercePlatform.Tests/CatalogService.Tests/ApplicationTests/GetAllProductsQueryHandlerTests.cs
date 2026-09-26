@@ -8,7 +8,11 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Moq;
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
+using Xunit.Sdk;
+using Xunit.v3;
+//[assembly: CollectionBehavior(DisableTestParallelization = true)]
+[assembly: Parallelization(Mode = ParallelMode.None)]
 
 namespace CatalogService.Tests.ApplicationTests
 {

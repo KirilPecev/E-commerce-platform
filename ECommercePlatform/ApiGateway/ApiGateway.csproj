@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Stay on Apache-2.0-licensed MassTransit 8.5.12; MassTransit 9.x uses a commercial license. -->
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.12" />
     <PackageReference Include="Microsoft.OpenApi" Version="3.11.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="Ocelot" Version="25.0.2" />

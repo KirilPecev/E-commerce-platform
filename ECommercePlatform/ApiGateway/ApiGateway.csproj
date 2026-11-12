@@ -14,7 +14,6 @@
     <PackageReference Include="Ocelot" Version="25.0.2" />
 	<PackageReference Include="Ocelot.Provider.Polly" Version="24.1.0" />
 	<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
-	<PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>
